@@ -1,0 +1,22 @@
+export const barangay: string[] = [
+    "Bulalo",
+    "Datu Ito Andong",
+    "Datu Wasay",
+    "Hinalaan",
+    "Kalamansig (Poblacion)",
+    "Kanipaan",
+    "Katiko",
+    "Kuden",
+    "Luuk Datan",
+    "Nalilidan",
+    "New Carcar",
+    "New Cebu",
+    "New Lagao",
+    "Pinol",
+    "Sangbay",
+    "Senor",
+    "Simsiman",
+    "Spring",
+    "Sta. Clara",
+    "Sto. Niño"
+]
