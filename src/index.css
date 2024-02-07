@@ -58,7 +58,7 @@ button:active {
 }
 
 .unauthorized-container {
-
+ width: 100%;
 }
 
 /* this only use to handle auth css */

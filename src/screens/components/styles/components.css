@@ -144,6 +144,7 @@ padding-right: 1em; /* Add some padding to compensate for the removal of the arr
   width: 230px; /* Set the width to 100% */
   height: 100vh;
   z-index: 999; /* Add z-index to ensure it's above other content */
+  overflow-x: scroll;
 }
 
 
