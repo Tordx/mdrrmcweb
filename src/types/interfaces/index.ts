@@ -1,3 +1,19 @@
+
+
+export interface registrationdata {
+  firstname: string,
+  middlename: string,
+  lastname: string,
+  suffix: string,
+  address: string,
+  contact: string,
+  contact1: string,
+  contact2: string,
+  families: string,
+  id: string,
+  type: string,
+  
+}
 //NOTE:You must create new interface for each data that has different data types
 
 //this interface is use in personaldata

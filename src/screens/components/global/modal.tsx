@@ -1,23 +1,23 @@
 import React from 'react';
 import '../styles/components.css';
+import { children } from 'types/interfaces';
 
 type Props = {
     isOpen: boolean,
     onClose: (e: any) => void,
-    imageSrc: string,
+    children: any | null
 }
 
-const Modal = ({ isOpen, onClose, imageSrc }: Props) => {
+const Modal = ({ isOpen, onClose, children }: Props) => {
   return (
     <>
       {isOpen && (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay">
              <span className="modal-close" onClick={onClose}>
               &times;
             </span>
           <div className="modal-content">
-           
-            <img src={imageSrc} alt="Expanded Image" className="modal-image" />
+           {children}
           </div>
         </div>
       )}

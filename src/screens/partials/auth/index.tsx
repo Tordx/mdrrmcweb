@@ -72,7 +72,7 @@ export default function Login({}) {
         settoast('logging in...')
         await signInWithEmailAndPassword(auth, email, password).then(() => {
           setloading(false)
-          navigate("/alumni/news")
+          navigate("/admin/statistics")
         }).catch((error: any) => {
           console.log(error)
           if(error == 'FirebaseError: Firebase: Error (auth/invalid-login-credentials).'){

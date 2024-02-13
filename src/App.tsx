@@ -5,19 +5,14 @@ import { AuthContext } from 'auth';
 import { ForgotPassword } from 'screens/partials/auth/forgotpassword';
 import { children } from 'types/interfaces';
 import Login from 'screens/partials/auth';
-import News from 'screens/home/news';
 import { Header } from 'screens/components/gen/header';
 import Navbarmenu from 'screens/components/gen/navigator/navbarmenu';
-import Events from 'screens/home/events';
-import Activities from 'screens/home/activities';
 import Error from 'screens/partials/Error/Error';
 import Account from 'screens/home/details/account';
-import Education from 'screens/home/details/education';
-import Employment from 'screens/home/details/employment';
-import Personal from 'screens/home/details/personal';
-import Status from 'screens/home/details/status';
 import Logout from 'screens/partials/auth/logout';
-import NewsLetter from 'screens/components/global/newsletter';
+import Statistics from 'screens/home/statistics';
+import RegistrationTable from 'screens/home/registration/table';
+import Registration from 'screens/home/registration';
 
 
 //**NOTE**(((((ONLY USE TSRFC WHEN CREATING NEW SCREENS)))))**NOTE**/
@@ -65,6 +60,9 @@ const App: React.FC = () => {
         </Route>
         <Route path = "admin">
           <Route path='account' index element={ <ProtectedRoute><Account/></ProtectedRoute>}/>
+          <Route path='registration' index element={ <ProtectedRoute><Registration/></ProtectedRoute>}/>
+
+          <Route path='statistics' index element={ <ProtectedRoute><Statistics/></ProtectedRoute>}/>
         </Route>
       </Routes>
     

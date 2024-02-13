@@ -55,6 +55,7 @@ button:active {
 
 .container {
   padding-left: 220px;
+  width: 100vh;
 }
 
 .unauthorized-container {
