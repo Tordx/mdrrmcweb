@@ -66,7 +66,6 @@ export default function Data({data}: Props) {
 				</div>
     	</Card>
 		}
-		<Modal  isOpen={modalOpen} onClose={closeModal} imageSrc={data.photo}/>
 		</>
   )
 }

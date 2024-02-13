@@ -306,13 +306,13 @@ padding-right: 1em; /* Add some padding to compensate for the removal of the arr
   align-items: center;
   justify-content: center;
   z-index: 999;
+  overflow-y: auto;
 }
 
 .modal-content {
   position: relative;
   max-width: 80%;
   max-height: 80%;
-  overflow: hidden;
 }
 
 .container .image-overlay .modal-overlay .modal-content .modal-image {

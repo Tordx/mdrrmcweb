@@ -1,0 +1,22 @@
+.chart-container {
+    background-color: #ECF1F7;
+    width: 2000px;
+    padding: 20px;
+    margin-left: 100px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: #2F5288;
+    border-radius: 15px;
+}
+
+.chart-container span {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.chart-container span h1 {
+    margin-left: 10px;
+}

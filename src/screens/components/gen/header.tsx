@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser, faLocationDot, faUser } from '@fortawesome/free-solid-svg-icons';
 import NavBarItems from './navigator/navbaritems';
 import { educationdata, personaldata } from 'types/interfaces';
-import { fetcheducation, fetchpersonaldata } from '../../../firebase/function';
 import { CustomButton } from '../global/buttons';
 import { Button, ButtonBase, IconButton } from '@mui/material';
 import TouchRipple from '@mui/material/ButtonBase/TouchRipple';
@@ -21,8 +20,6 @@ export const Header: React.FC<Props> = ({menu}) => {
   const navigate = useNavigate()
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const {currentUser} = useContext(AuthContext)
-  const [user, setuser] = useState<personaldata[]>([]);
-  const [education, seteducation] = useState<string>('')
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -31,19 +28,6 @@ export const Header: React.FC<Props> = ({menu}) => {
     setActive(id);
   }
 
-  React.useEffect(() => {
-    fetchuser();
-  },[])
-
-  const fetchuser = async() => {
-    const result: personaldata[] = await fetchpersonaldata(currentUser?.uid || '') || []
-    setuser(result)
-    const educresult: educationdata[] = await fetcheducation(currentUser?.uid || '') || []
-    const uniqueSchoolYear = [...new Set(educresult.map(item => item.sy))].join(', ');
-
-    seteducation(uniqueSchoolYear)
-  }
-  
   const signOutUser = async () => {
 		try {
 				await signOut(auth);
