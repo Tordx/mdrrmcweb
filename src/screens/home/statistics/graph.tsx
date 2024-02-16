@@ -21,7 +21,7 @@ const Graph = ({ chartdata }: Props) => {
       </span>
       <BarChart
         xAxis={[{ scaleType: 'band', data: barangay }]}
-        width={2000}
+        width={1000}
         height={250}
         slotProps={{
           legend: {

@@ -11,8 +11,8 @@ import Error from 'screens/partials/Error/Error';
 import Account from 'screens/home/details/account';
 import Logout from 'screens/partials/auth/logout';
 import Statistics from 'screens/home/statistics';
-import RegistrationTable from 'screens/home/registration/table';
 import Registration from 'screens/home/registration';
+import Evactuation from 'screens/home/evacuation';
 import SMS from 'screens/home/SMS/SMS';
 
 
@@ -24,29 +24,12 @@ const App: React.FC = () => {
 
   const ProtectedRoute: React.FC<children> = ({ children }) => {
     if (currentUser === null) {
-      return <Navigate to="/alumni/news" />;
+      return <Navigate to="/login" />;
     }
 
     return children
   };
 
-  React.useEffect(() => {
-    newsLetter()
-  },[])
-
-  const newsLetter = async() => {
-    console.log('this is where website ask you for newsletter')
-    const saved: string = localStorage.getItem('newsletter') || '';
-    console.log(saved)
-    if(saved == '') {
-      console.log('newsletter unsubscribed')
-      setIsIOpen(true)
-    } else {
-
-      console.log('newsletter subscribed')
-      return
-    }
-  }
   return (
     <BrowserRouter>
       {currentUser && <Header menu={Navbarmenu} />}
@@ -62,8 +45,8 @@ const App: React.FC = () => {
         <Route path = "admin">
           <Route path='account' index element={ <ProtectedRoute><Account/></ProtectedRoute>}/>
           <Route path='registration' index element={ <ProtectedRoute><Registration/></ProtectedRoute>}/>
+          <Route path='centers' index element={ <ProtectedRoute><Evactuation/></ProtectedRoute>}/>
           <Route path='sms' index element={ <ProtectedRoute><SMS/></ProtectedRoute>}/>
-
           <Route path='statistics' index element={ <ProtectedRoute><Statistics/></ProtectedRoute>}/>
         </Route>
       </Routes>
