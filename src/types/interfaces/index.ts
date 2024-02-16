@@ -12,6 +12,8 @@ export interface registrationdata {
   families: string,
   id: string,
   type: string,
+  subject: string,
+  message: string,
   
 }
 //NOTE:You must create new interface for each data that has different data types

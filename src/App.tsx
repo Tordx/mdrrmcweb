@@ -15,7 +15,6 @@ import RegistrationTable from 'screens/home/registration/table';
 import Registration from 'screens/home/registration';
 import SMS from 'screens/home/SMS/SMS';
 
-
 //**NOTE**(((((ONLY USE TSRFC WHEN CREATING NEW SCREENS)))))**NOTE**/
 
 const App: React.FC = () => {

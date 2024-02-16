@@ -19,6 +19,8 @@ export default function Form({}: Props) {
     contact2: '',
     families: '',
     id: '',
+    subject: '',
+    message: '',
     type: '',}
   ])
 

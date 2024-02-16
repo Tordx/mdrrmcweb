@@ -20,6 +20,8 @@ export const fetchRegistrationList = async() => {
         families: doc.data().families,
         id: doc.data().id,
         type: doc.data().type,
+        subject: doc.data().subject,
+        message: doc.data().message,
       })
     })
 
