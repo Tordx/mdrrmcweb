@@ -41,7 +41,6 @@ export default function Statistics({}: Props) {
       <br/>
       <br/>
         <Graph chartdata={data}/>
-        <br/>
         <DisasterTable/>
     </div>
   )

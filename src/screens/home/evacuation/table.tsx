@@ -4,16 +4,28 @@ import { fetchRegistrationList } from '../../../firebase/function'
 import React from 'react'
 import { registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column } from 'react-table';
-import './statistics.css'
+import './evacuation.css'
+
+type Props = {
+  onAddHeadOfFamily: (value: boolean) => void;
+};
 
 const headers = [
-  {name: 'Disaster', id: 'disaster'},
-  {name: 'Action', id: 'action'},
+  {name: 'Centre', id: 'centre'},
+  {name: 'Address', id: 'address'},
+  {name: 'Total capacity', id: 'capacity'},
+  {name: 'id', id:'id'},
+  { name: 'Edit', id: 'edit' },
 ]
 
-export default function DisasterTable() {
+export default function EvacuationTable({ onAddHeadOfFamily }: Props) {
 
     const [tabledata, settabledata] = React.useState<registrationdata[]>([])
+
+    const handleAddHeadOfFamilyClick = () => {
+      // Here you can access the current data in `tabledata` and pass it to the `onAddHeadOfFamily` function
+      onAddHeadOfFamily(true);
+    }
 
     React.useEffect(() => {
         const getRegistration = async( ) => {
@@ -28,10 +40,10 @@ export default function DisasterTable() {
         headers.map((header) => ({
           Header: header.name,
           accessor: header.id,
-          disableSortBy: header.id === 'action',
+          disableSortBy: header.id === 'edit' || header.id === 'view', // Disable sorting for "Edit" and "View" columns
           Cell: ({ row }) =>
-            header.id === 'action' ? (
-              <button>{header.name}</button>
+            header.id === 'edit' || header.id === 'view' ? (
+              <button>{header.id === 'edit' ? 'Edit' : 'View'}</button>
             ) : (
               row.original[header.id]
             ),
@@ -66,10 +78,11 @@ export default function DisasterTable() {
       ) as any;
 
   return (
-    <div className="statistics-table">
+    <div className="evacuation-table">
+        <button onClick={handleAddHeadOfFamilyClick}>+ Add Evacuation Center </button>
         <br/>
-          <div className='statistics-table-itself'>
-            <h1>Recent Disasters</h1>
+          <div className='evacuation-table-itself'>
+            <h1>Evacuation Centers</h1>
             <div className='search-bar'>
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
             <input
