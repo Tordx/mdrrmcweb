@@ -13,6 +13,7 @@ import Logout from 'screens/partials/auth/logout';
 import Statistics from 'screens/home/statistics';
 import RegistrationTable from 'screens/home/registration/table';
 import Registration from 'screens/home/registration';
+import SMS from 'screens/home/SMS/SMS';
 
 
 //**NOTE**(((((ONLY USE TSRFC WHEN CREATING NEW SCREENS)))))**NOTE**/
@@ -61,6 +62,7 @@ const App: React.FC = () => {
         <Route path = "admin">
           <Route path='account' index element={ <ProtectedRoute><Account/></ProtectedRoute>}/>
           <Route path='registration' index element={ <ProtectedRoute><Registration/></ProtectedRoute>}/>
+          <Route path='sms' index element={ <ProtectedRoute><SMS/></ProtectedRoute>}/>
 
           <Route path='statistics' index element={ <ProtectedRoute><Statistics/></ProtectedRoute>}/>
         </Route>
