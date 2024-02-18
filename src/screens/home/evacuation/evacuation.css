@@ -61,5 +61,9 @@
   background-color: #00000000;
   color: black;
   margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 

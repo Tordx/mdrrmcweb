@@ -81,6 +81,10 @@
   color: black;
   margin: 20px;
   margin-right: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 .edit-view-cell {
   display: flex;
