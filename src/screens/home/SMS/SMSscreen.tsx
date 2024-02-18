@@ -168,7 +168,7 @@ export default function SMSTable ({ openViewSMS , onAddHeadOfFamily , smsViewDat
           <button onClick={handleAddHeadOfFamilyClick}>+ Compose SMS Notification </button>
           <br />
           <div className='table-itself'>
-            <h1>Registered Head of the Family</h1>
+            <h1>SMS Alerts</h1>
             <div className='search-bar'>
               <FontAwesomeIcon icon={faSearch} className="search-icon" />
               <input

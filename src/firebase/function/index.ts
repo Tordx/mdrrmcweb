@@ -63,7 +63,8 @@ export const fetchRegistrationList = async() => {
           id: doc.data().id,
           type: doc.data().type,
           active: doc.data().active,
-
+          subject: '',
+          message: '',
         })
       })
   
