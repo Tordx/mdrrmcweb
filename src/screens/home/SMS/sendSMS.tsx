@@ -10,7 +10,7 @@ import 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getFirestore , getDocs, collection, addDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
-
+import { generateRandomKey } from '../../../firebase/function'
 
 type Props = {
     onAddHeadOfFamily: (value: boolean) => void;
@@ -60,7 +60,7 @@ export default function SendSMS({onAddHeadOfFamily}: Props) {
       const newChat = {
         subject: form.subject,
         message: form.message,
-        uuid: uuidv4()
+        id: generateRandomKey(25)
         // Add any other fields you want to store in the Firestore document
       };
   

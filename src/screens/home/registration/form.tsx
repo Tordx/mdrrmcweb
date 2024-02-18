@@ -30,7 +30,7 @@ export default function Form({success}: Props) {
     message: '',
     type: '',
     active: true,
-  ])
+}])
   const [isloading, setisloading] = React.useState<boolean>(false)
 
   const submit = async() => {
