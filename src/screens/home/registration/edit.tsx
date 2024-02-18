@@ -29,8 +29,6 @@ export default function Edit({success, data}: Props) {
     id: newData?.id || '',
     type: newData?.type || '',
     active: newData?.active || true,
-    subject: newData?.subject || '',
-    message: newData?.message || '',
 
 }
   ])

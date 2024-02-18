@@ -1,6 +1,6 @@
-import { fetchdisaster } from '../../../firebase/function';
+import { fetchdisaster, fetchdisasterevacuation } from '../../../firebase/function';
 import React from 'react'
-import { disasterdata } from 'types/interfaces';
+import { disastercenter, disasterdata } from 'types/interfaces';
 import {addDoc, collection, setDoc, doc} from '@firebase/firestore'
 import { auth, db, storage } from '../../../firebase/index'
 import DisasterEvacTable from './table';
@@ -10,6 +10,9 @@ import Form from './form';
 import Edit from './edit';
 import { CircularProgress } from '@mui/material';
 import { Details } from './details';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 type Props = {}
 
 export default function DisasterDetails({}: Props) {
@@ -18,24 +21,40 @@ export default function DisasterDetails({}: Props) {
     const [isModalEditOpen, setIsModalEditOpen] = React.useState<boolean>(false)
     const [isloading, setisloading] = React.useState<boolean>(false);
     const [editValue, setEditValue] = React.useState<disasterdata>();
+    const [disastercenter, setdisastercenter] = React.useState<disastercenter>();
+
     const [deleteModal, setDeleteModal] = React.useState<boolean>(false)
     const [deleteID, setDeleteID] = React.useState<string>('')
-  
-    const getData = async(e: string, b: boolean) => {
+    const { id } = useParams();
+    const navigate = useNavigate()
+    React.useEffect(() => {
+        getData()
+    },[])
+
+    const getData = async() => {
         try {
-          const result: disasterdata[] = await fetchdisaster(e) || [];
+          const result: disasterdata[] = await fetchdisaster(id || '') || [];
+
           const filteredResult = result[0]
           setEditValue(filteredResult)
-          setIsModalEditOpen(b)
+          setIsModalEditOpen(false)
         } catch (error) {
   
         }
+    }
+
+    const getDisasterEvacuationData = async(id: string) => {
+        const result: disastercenter[] = await fetchdisasterevacuation(id) || [];
+        const filteredResult = result[0]
+
+        setdisastercenter(filteredResult)
+        setIsModalEditOpen(true)
     }
   
     const deleteData = async(id: string) => {
       setisloading(true)
       try {
-        const registrationRef = doc(db, 'disaster', id)
+        const registrationRef = doc(db, 'disastercenter', id)
         setDoc(registrationRef,{
           id: id,
           active: false,
@@ -52,10 +71,11 @@ export default function DisasterDetails({}: Props) {
     }
   return (
     <div className='container'>
-    <Details/>
+    <FontAwesomeIcon onClick={() => navigate('/admin/disasters')} className='exit-button' icon={faChevronLeft} />
+    <Details data={editValue}/>
     <DisasterEvacTable
+        value={(e, a) => {getDisasterEvacuationData(e)}}
         archive={(e, b) => {setDeleteModal(e); setDeleteID(b)}}
-        value={(e, b) => getData(e, b)} 
         onAddHeadOfFamily={(e) => setIsModalAddOpen(e)}/>
     <Modal
       isOpen = {isModalAddOpen}
@@ -65,18 +85,18 @@ export default function DisasterDetails({}: Props) {
         <Form success={(e) => {setIsModalAddOpen(e)}}/>
       </Card>
     </Modal>
-    {/* <Modal
+    <Modal
       isOpen = {isModalEditOpen}
       onClose={() => setIsModalEditOpen(false)}
     >
       <Card className='form-wrapper'>
         <Edit
-          data = {editValue}
+          data = {disastercenter}
           success={(e) => setIsModalEditOpen(e)}
         
         />
       </Card>
-    </Modal> */}
+    </Modal>
     <Modal
       isOpen = {deleteModal}
       onClose={() => setDeleteModal(false)}

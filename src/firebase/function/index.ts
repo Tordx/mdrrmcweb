@@ -1,6 +1,6 @@
 import {getDocs,collection, setDoc, doc} from '@firebase/firestore'
 import { db } from '..';
-import { centerdata, disasterdata, registrationdata } from 'types/interfaces';
+import { centerdata, disastercenter, disasterdata, registrationdata } from 'types/interfaces';
 
 
 export const generateRandomKey = (length: number) => {
@@ -30,8 +30,6 @@ export const fetchRegistrationList = async() => {
         families: doc.data().families,
         id: doc.data().id,
         type: doc.data().type,
-        subject: doc.data().subject,
-        message: doc.data().message,
         active: doc.data().active,
 
       })
@@ -63,8 +61,6 @@ export const fetchRegistrationList = async() => {
           id: doc.data().id,
           type: doc.data().type,
           active: doc.data().active,
-          subject: '',
-          message: '',
         })
       })
   
@@ -164,6 +160,30 @@ export const fetchdisaster = async(id: string) => {
         infra: doc.data().infra,
         livestock: doc.data().livestock,
         active: doc.data().active,
+      })
+    })
+
+    return thisdata;
+
+  } catch(error){
+    console.log(error)
+  }
+}
+
+export const fetchdisasterevacuation = async(id: string) => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'disastercenter'));
+    const thisdata: disastercenter[] = []
+    querySnapshot.forEach((doc) => {
+      if(doc.data().id === id)
+      thisdata.push({
+       center: doc.data().center,
+       evacuees: doc.data().evacuees,
+       id: doc.data().id,
+       active: doc.data().active,
+       date: doc.data().date,
+       services: doc.data().services,
+       disasterid: doc.data().disasterid,
       })
     })
 

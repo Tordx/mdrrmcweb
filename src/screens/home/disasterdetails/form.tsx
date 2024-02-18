@@ -1,23 +1,25 @@
-import { faLocationPin, faLock, faPhone, faUser, faUserAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons'
+import { faHandsHelping, faLocationPin, faLock, faPhone, faUser, faUserAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons'
 import React, { useState } from 'react'
-import { LoginFields } from 'screens/components/global/fields'
-import { centerdata, registrationdata } from 'types/interfaces'
+import { LargeTextField, LoginFields } from 'screens/components/global/fields'
+import { centerdata, disastercenter, registrationdata } from 'types/interfaces'
 import '../../contents/styles/contents.css'
 import '../../components/styles/components.css'
 import {addDoc, collection, setDoc, doc} from '@firebase/firestore'
 import { auth, db, storage } from '../../../firebase/index'
 import { generateRandomKey } from '../../../firebase/function'
 import { CircularProgress } from '@mui/material'
+import { useParams } from 'react-router-dom'
 type Props = {
   success: (e: boolean) => void,
 }
 
 export default function Form({success}: Props) {
-
-  const [form, setform] = React.useState<centerdata[]>([
+  const {id} = useParams()
+  const [form, setform] = React.useState<disastercenter[]>([
    { center: '',
-    address: '',
-    capacity: '',
+    evacuees: '',
+    services: '',
+    disasterid: id || '',
     id: '',
     active: true,
     date: new Date(),
@@ -29,19 +31,22 @@ export default function Form({success}: Props) {
     setisloading(true)
     const {
     center,
-    address,
-    capacity,
+    evacuees,
+    services,
     active,
-    date
+    date,
+    id,
+    disasterid
     } = form[0]
 
     try {
       const id = generateRandomKey(25)
-      const registrationRef = doc(db, 'center', id)
+      const registrationRef = doc(db, 'disastercenter', id)
       setDoc(registrationRef,{
         center: center,
-        address: address,
-        capacity: capacity,
+        evacuees: evacuees,
+        services: services,
+        disasterid: disasterid,
         id: id,
         active: true,
         date: date,
@@ -81,36 +86,35 @@ export default function Form({success}: Props) {
             value= {form[0].center} 
         />
         <LoginFields
-            title='Address'
+            title='Evacuees'
             type  ='address'
             icon = {faUserAlt}
             disabled = {false}
             onChange={(e) => setform((prev) => [
                 {
                   ...prev[0],
-                  address: e.target.value,
+                  evacuees: e.target.value,
                 },
               ])}
-            placeholder= 'Address' 
-            value= {form[0].address} 
+            placeholder= 'How many Evacuees' 
+            value= {form[0].evacuees} 
         />
-        <LoginFields
-            title = 'Maximum Capacity'
+        <LargeTextField 
+            title = 'Response/Services'
             type  ='text'
-            icon = {faUserAlt}
             disabled = {false}
             onChange={(e) => setform((prev) => [
                 {
-                  ...prev[0],
-                  capacity: e.target.value,
+                ...prev[0],
+                services: e.target.value,
                 },
-              ])}
-            placeholder= 'Maximum Capacity' 
-            value= {form[0].capacity} 
+            ])}
+            placeholder= 'What are the response/services offered' 
+            value= {form[0].services}
         />
         
         <button onClick = {submit} style = {{marginTop: 20}}>
-              Update
+              Add Evacuation Center
         </button>
       </>
       }

@@ -17,7 +17,7 @@ const headers = [
   {name: 'Name', id: 'disaster'},
   {name: 'Date', id: 'date'},
   {name: 'Total Evacuees', id: 'evacuees'},
-  {name: 'Total Damages', id:'damages'},
+  {name: 'Total Damages', id:''},
   {name: 'ID', id:'id'},
 
   { name: 'Action', id: 'edit' },
@@ -57,27 +57,56 @@ export default function DisasterTable({ onAddHeadOfFamily, value, archive }: Pro
         navigate(`/admin/disasters/details/${id}`)
     }
 
+    const totalAgriDamages = tabledata.reduce((acc, current) => acc + (parseInt(current.agri) || 0), 0);
+    const totalInfraDamages = tabledata.reduce((acc, current) => acc + (parseInt(current.infra) || 0), 0);
+    const totalLivestockDamages = tabledata.reduce((acc, current) => acc + (parseInt(current.livestock) || 0), 0);
+    const totalDamages = totalAgriDamages + totalInfraDamages + totalLivestockDamages;
+
+const updatedHeaders = [...headers, { name: 'Total Damages', id: 'totalDamages' }];
+
+const columns: Column<any>[] = React.useMemo(
+  () =>
+    updatedHeaders.map((header) => ({
+      Header: header.name,
+      accessor: header.id,
+      disableSortBy: header.id === 'edit' || header.id === 'view' || header.id === 'totalDamages',
+      Cell: ({ row }) =>
+        header.id === 'edit' || header.id === 'view' ? (
+          <div className='table-button-container'>
+            <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
+            <button onClick={() => { openView(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'View' : 'Edit'}</button>
+            <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
+          </div>
+        ) : header.id === 'totalDamages' ? (
+          <div>{totalDamages}</div>
+        ) : (
+          row.original[header.id]
+        ),
+    })),
+  [headers]
+);
 
 
-    const columns: Column<any>[] = React.useMemo(
-      () =>
-        headers.map((header) => ({
-          Header: header.name,
-          accessor: header.id,
-          disableSortBy: header.id === 'edit' || header.id === 'view',
-          Cell: ({ row }) =>
-            header.id === 'edit' || header.id === 'view' ? (
-                <div className = 'table-button-container'>
-              <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
-              <button onClick={() => { openView(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'View' : 'Edit'}</button>
-              <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
-              </div>
-              ) : (
-              row.original[header.id]
-            ),
-        })),
-      [headers]
-    );
+
+    // const columns: Column<any>[] = React.useMemo(
+    //   () =>
+    //     headers.map((header) => ({
+    //       Header: header.name,
+    //       accessor: header.id,
+    //       disableSortBy: header.id === 'edit' || header.id === 'view',
+    //       Cell: ({ row }) =>
+    //         header.id === 'edit' || header.id === 'view' ? (
+    //             <div className = 'table-button-container'>
+    //           <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
+    //           <button onClick={() => { openView(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'View' : 'Edit'}</button>
+    //           <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
+    //           </div>
+    //           ) : (
+    //           row.original[header.id]
+    //         ),
+    //     })),
+    //   [headers]
+    // );
     
     
       const {
@@ -169,12 +198,12 @@ export default function DisasterTable({ onAddHeadOfFamily, value, archive }: Pro
                 })}
               </tbody>
             </table>
-            <div style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+            <div style={{ width: '21%', justifyContent: 'space-between', display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
               <button className="pagination-button" onClick={() => previousPage()} disabled={!canPreviousPage}>
                 Previous
               </button>
-              <span>
-                Page <strong>{pageIndex + 1}</strong> of {Math.ceil(tabledata.length / pageSize)}
+              <span style = {{marginLeft: 20}}>
+                 <strong>{pageIndex + 1}</strong> of {Math.ceil(tabledata.length / pageSize)}
               </span>
               <button className="pagination-button" onClick={() => nextPage()} disabled={!canNextPage}>
                 Next

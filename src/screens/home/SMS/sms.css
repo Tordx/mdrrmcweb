@@ -80,6 +80,7 @@
   background-color: #00000000;
   color: black;
   margin: 20px;
+  margin-right: 100px;
 }
 .edit-view-cell {
   display: flex;
@@ -103,7 +104,7 @@
   color: #2F5288;
 }
 /* Modal Container */
-.modal {
+/* .modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -117,15 +118,15 @@
   transition: opacity 0.3s ease-in-out;
   opacity: 0;
   pointer-events: none;
-}
+} */
 
 /* Modal Content */
-.modal-content {
+/* .modal-content {
   background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
+} */
 
 /* Modal Open Animation */
 .modal.open {
@@ -192,11 +193,11 @@ button.send {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-content {
+/* .modal-content {
   background-color: #fff;
   padding: 20px;
   border-radius: 5px;
-}
+} */
 
 .close {
   position: absolute;

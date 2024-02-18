@@ -12,8 +12,6 @@ export interface registrationdata {
   families: string,
   id: string,
   type: string,
-  subject: string,
-  message: string,
   active: boolean,
   
 }
@@ -29,6 +27,19 @@ export interface centerdata {
   
 }
 
+export interface disastercenter {
+
+  center: string,
+  evacuees: string,
+  id: string,
+  services: string,
+  active: boolean,
+  date: Date,
+  disasterid: string,
+
+  
+}
+
 export interface disasterdata {
   disaster: string,
   id: string,
@@ -41,6 +52,7 @@ export interface disasterdata {
   livestock: string,
   active: boolean,
 }
+
 //NOTE:You must create new interface for each data that has different data types
 
 //this interface is use in personaldata

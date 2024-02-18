@@ -131,12 +131,12 @@ export default function DisasterTable() {
                 })}
               </tbody>
             </table>
-            <div style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+            <div style={{ width: '21%', justifyContent: 'space-between', display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
               <button className="pagination-button" onClick={() => previousPage()} disabled={!canPreviousPage}>
                 Previous
               </button>
-              <span>
-                Page <strong>{pageIndex + 1}</strong> of {Math.ceil(tabledata.length / pageSize)}
+              <span style = {{marginLeft: 20}}>
+                 <strong>{pageIndex + 1}</strong> of {Math.ceil(tabledata.length / pageSize)}
               </span>
               <button className="pagination-button" onClick={() => nextPage()} disabled={!canNextPage}>
                 Next

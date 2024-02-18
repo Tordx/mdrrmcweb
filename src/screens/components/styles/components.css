@@ -94,7 +94,7 @@ padding-right: 1em; /* Add some padding to compensate for the removal of the arr
   border: 2px solid #8FABD3;
   border-radius: 5px;
   width: 300px;
-  height: 150px;
+  height: 175px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,6 +119,7 @@ padding-right: 1em; /* Add some padding to compensate for the removal of the arr
 
 .global-large-text-field textarea {
   width: 100%;
+  margin-top: 20px;
   height: 85%;
   border: none;
   resize: none;

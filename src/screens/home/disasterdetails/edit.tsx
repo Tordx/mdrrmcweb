@@ -1,7 +1,7 @@
-import { faLocationPin, faLock, faPhone, faUser, faUserAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons'
+import { faHandsHelping, faLocationPin, faLock, faPhone, faUser, faUserAlt, faUserFriends } from '@fortawesome/free-solid-svg-icons'
 import React, { useState } from 'react'
-import { LoginFields, Select } from 'screens/components/global/fields'
-import { centerdata, registrationdata } from 'types/interfaces'
+import { LargeTextField, LoginFields, Select } from 'screens/components/global/fields'
+import { centerdata, disastercenter, registrationdata } from 'types/interfaces'
 import '../../contents/styles/contents.css'
 import '../../components/styles/components.css'
 import {addDoc, collection, setDoc, doc} from '@firebase/firestore'
@@ -11,20 +11,20 @@ import { CircularProgress } from '@mui/material'
 import { barangay } from '../statistics/barangay'
 type Props = {
   success: (e:boolean) => void,
-  data: centerdata | undefined
+  data: disastercenter  | undefined
 }
 
 export default function Edit ({success, data}: Props) {
   const newData = data
-  const [form, setform] = React.useState<centerdata[]>([
+  const [form, setform] = React.useState<disastercenter[]>([
    { 
     center: newData?.center ||'',
-    address: newData?.address || '',
-    capacity:  newData?.capacity || '',
+    evacuees:  newData?.evacuees || '',
     id: newData?.id || '',
     active: newData?.active || true,
     date: new Date(),
-
+    services: newData?.services || '',
+    disasterid: newData?.disasterid || '',
 
 }
   ])
@@ -34,22 +34,24 @@ export default function Edit ({success, data}: Props) {
     setisloading(true)
     const {
         center,
-        address,
-        capacity,
+        evacuees,
         id,
         active,
         date,
+        services,
+        disasterid,
     } = form[0]
 
     try {
       const registrationRef = doc(db, 'center', id)
       setDoc(registrationRef,{
         center: center,
-        address: address,
-        capacity: capacity,
+        evacuees: evacuees,
         id: id,
         active: active,
         date: date,
+        services: services,
+        disasterid: disasterid,
       }).then((res) => {
         success(false)
         setisloading(false)
@@ -68,7 +70,7 @@ export default function Edit ({success, data}: Props) {
     </>
     :
     <>
-      <h1>Edit Evacuation Center</h1>
+      <h1>Edit Disaster Evacuation Center</h1>
         <LoginFields
             title='Center Name'
             type  ='text'
@@ -84,34 +86,32 @@ export default function Edit ({success, data}: Props) {
             value= {form[0].center} 
         />
         <LoginFields
-            title='Address'
-            type  ='address'
-            icon = {faUserAlt}
-            disabled = {false}
-            onChange={(e) => setform((prev) => [
-                {
-                  ...prev[0],
-                  address: e.target.value,
-                },
-              ])}
-            placeholder= 'Address' 
-            value= {form[0].address} 
-        />
-        <LoginFields
-            title = 'Maximum Capacity'
+            title = 'Evacuees'
             type  ='text'
             icon = {faUserAlt}
             disabled = {false}
             onChange={(e) => setform((prev) => [
                 {
                   ...prev[0],
-                  capacity: e.target.value,
+                  evacuees: e.target.value,
                 },
               ])}
-            placeholder= 'Maximum Capacity' 
-            value= {form[0].capacity} 
+            placeholder= 'Insert Evacuees' 
+            value= {form[0].evacuees} 
         />
-        
+        <LargeTextField 
+            title = 'Response/Services'
+            type  ='text'
+            disabled = {false}
+            onChange={(e) => setform((prev) => [
+                {
+                ...prev[0],
+                services: e.target.value,
+                },
+            ])}
+            placeholder= 'What are the response/services offered' 
+            value= {form[0].services}
+        />
         <button onClick = {submit} style = {{marginTop: 20}}>
               Update
         </button>

@@ -2,7 +2,7 @@ import { faChevronDown, faChevronUp, faSearch, faTrash } from '@fortawesome/free
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fetchCenters, fetchRegistrationList } from '../../../firebase/function'
 import React from 'react'
-import { centerdata, registrationdata } from '../../../types/interfaces'
+import { centerdata, disastercenter, registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column } from 'react-table';
 import '../evacuation/evacuation.css'
 import { onSnapshot, collection, query, where } from '@firebase/firestore';
@@ -11,22 +11,22 @@ import { useParams } from 'react-router-dom'
 
 type Props = {
   onAddHeadOfFamily: (value: boolean) => void;
-  value: (e: any, b: any) => void;
+  value: (e: string, b: boolean) => void;
   archive: (e: boolean, b: string) => void;
 
 };
 
 const headers = [
   {name: 'Center', id: 'center'},
-  {name: 'Address', id: 'address'},
-  {name: 'Total capacity', id: 'capacity'},
+  {name: 'Evacuees', id: 'evacuees'},
+  {name: 'Services', id: 'services'},
   {name: 'id', id:'id'},
   { name: 'Edit', id: 'edit' },
 ]
 
-export default function DisasterEvacTable({ onAddHeadOfFamily, value, archive }: Props) {
+export default function DisasterEvacTable({ onAddHeadOfFamily, archive, value }: Props) {
     const { id } = useParams();
-    const [tabledata, settabledata] = React.useState<centerdata[]>([])
+    const [tabledata, settabledata] = React.useState<disastercenter[]>([])
 
     const handleAddHeadOfFamilyClick = () => {
       onAddHeadOfFamily(true);
@@ -51,17 +51,18 @@ export default function DisasterEvacTable({ onAddHeadOfFamily, value, archive }:
 
     const fetchCentersAuto = () => {
       try {
-        const q = query(collection(db, 'center-record'), where("active", "==", true), where("disasterID", "==", id));
+        const q = query(collection(db, 'disastercenter'), where("active", "==", true), where("disasterid", "==", id));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             console.log(id)
-          const newData: centerdata[] = [];
+          const newData: disastercenter[] = [];
           querySnapshot.forEach((doc) => {
             const data = doc.data();
-            if (data) { // Check if data is not undefined
+            if (data) { 
               newData.push({
                 center: data.center || "",
-                address: data.address || "",
-                capacity: data.capacity || "",
+                evacuees: data.evacuees || "",
+                services: data.services || "",
+                disasterid: data.disasterid || '',
                 id: data.id || "",
                 active: data.active || false,
                 date: data.date || new Date()
@@ -132,7 +133,7 @@ export default function DisasterEvacTable({ onAddHeadOfFamily, value, archive }:
 
   return (
     <div className="evacuation-table">
-        <button onClick={handleAddHeadOfFamilyClick}>+ Add Evacuation Center </button>
+        <button onClick={handleAddHeadOfFamilyClick}>+ Add New Evacuation Area </button>
         <br/>
           <div className='evacuation-table-itself'>
             <h1>Evacuation Centers</h1>
@@ -194,12 +195,12 @@ export default function DisasterEvacTable({ onAddHeadOfFamily, value, archive }:
                 })}
               </tbody>
             </table>
-            <div style={{ width: '100%', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+            <div style={{ width: '21%', justifyContent: 'space-between', display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
               <button className="pagination-button" onClick={() => previousPage()} disabled={!canPreviousPage}>
                 Previous
               </button>
               <span>
-                Page <strong>{pageIndex + 1}</strong> of {Math.ceil(tabledata.length / pageSize)}
+                 <strong>{pageIndex + 1}</strong> of {Math.ceil(tabledata.length / pageSize)}
               </span>
               <button className="pagination-button" onClick={() => nextPage()} disabled={!canNextPage}>
                 Next
