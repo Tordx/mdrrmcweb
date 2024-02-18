@@ -1,6 +1,6 @@
-import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faMessage } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useCallback } from 'react';
-import { LoginFields } from 'screens/components/global/fields';
+import { LargeTextField, LoginFields } from 'screens/components/global/fields';
 import { initializeApp } from 'firebase/app';
 import { getStorage } from "@firebase/storage";
 import { getAuth } from 'firebase/auth';
