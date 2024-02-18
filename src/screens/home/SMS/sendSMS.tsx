@@ -1,6 +1,6 @@
-import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faMessage } from '@fortawesome/free-solid-svg-icons';
 import React, { useCallback, useState } from 'react';
-import { LoginFields } from 'screens/components/global/fields';
+import { LargeTextField, LoginFields } from 'screens/components/global/fields';
 import '../../contents/styles/contents.css';
 import '../../components/styles/components.css';
 import { MD5, enc } from 'crypto-js';
@@ -123,21 +123,21 @@ export default function SendSMS({onAddHeadOfFamily}: Props) {
       <LoginFields
         title='Subject'
         type='subject'
-        icon={faLock}
+        icon={faMessage}
         disabled={false}
         onChange={(e) => setForm({ ...form, subject: e.target.value })}
         placeholder='Subject'
         value={form.subject}
       />
-      <LoginFields
+      <LargeTextField
         title='Message'
         type='message'
-        icon={faLock}
         disabled={false}
         onChange={(e) => setForm({ ...form, message: e.target.value })}
         placeholder='Message'
         value={form.message}
       />
+      <br/>
        <button onClick={handleSubmit}>Send Request</button>
     </div>
   );

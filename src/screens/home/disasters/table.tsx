@@ -17,7 +17,6 @@ const headers = [
   {name: 'Name', id: 'disaster'},
   {name: 'Date', id: 'date'},
   {name: 'Total Evacuees', id: 'evacuees'},
-  {name: 'Total Damages', id:''},
   {name: 'ID', id:'id'},
 
   { name: 'Action', id: 'edit' },
