@@ -1,41 +1,78 @@
-import { faChevronDown, faChevronUp, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fetchRegistrationList } from '../../../firebase/function'
+import { fetchCenters, fetchDisasterList, fetchRegistrationList } from '../../../firebase/function'
 import React from 'react'
-import { registrationdata } from '../../../types/interfaces'
+import { centerdata, disasterdata, registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column } from 'react-table';
-import './statistics.css'
+import './disasters.css'
+import { useNavigate } from 'react-router-dom'
+
+type Props = {
+  onAddHeadOfFamily: (value: boolean) => void;
+  value: (e: string, b: boolean) => void;
+  archive: (e: boolean, b: string) => void;
+};
 
 const headers = [
-  {name: 'Disaster', id: 'disaster'},
-  {name: 'Action', id: 'id'},
+  {name: 'Name', id: 'disaster'},
+  {name: 'Date', id: 'date'},
+  {name: 'Total Evacuees', id: 'evacuees'},
+  {name: 'Total Damages', id:'damages'},
+  {name: 'ID', id:'id'},
+
+  { name: 'Action', id: 'edit' },
 ]
 
-export default function DisasterTable() {
+export default function DisasterTable({ onAddHeadOfFamily, value, archive }: Props) {
 
-    const [tabledata, settabledata] = React.useState<registrationdata[]>([])
-    const [viewdata, setviewdata] = React.useState<registrationdata>()
+    const [tabledata, settabledata] = React.useState<disasterdata[]>([])
+    const navigate = useNavigate()
+    const handleAddHeadOfFamilyClick = () => {
+      onAddHeadOfFamily(true);
+    }
+
+    
+    
+
     React.useEffect(() => {
-        const getRegistration = async( ) => {
-            const result: registrationdata[] = await fetchRegistrationList() || []
-            settabledata(result)
-        }
-        getRegistration()
+       
+        getDisaster()
     },[])
 
-    const openDisasterDetails = () => {
-
+    const getDisaster = async( ) => {
+        const result: disasterdata[] = await fetchDisasterList() || []
+        settabledata(result)
     }
+
+    const passdata = (id: string) => {
+      value(id, true)
+      console.log(id)
+    }
+
+    const deletedata = (id: string) => {
+        archive(true, id)
+    }
+
+    const openView = (id: string) => {
+        navigate(`/admin/disasters/details/${id}`)
+    }
+
+
+
     const columns: Column<any>[] = React.useMemo(
       () =>
         headers.map((header) => ({
           Header: header.name,
           accessor: header.id,
-          disableSortBy: header.id === 'id',
+          disableSortBy: header.id === 'edit' || header.id === 'view',
           Cell: ({ row }) =>
-            header.id === 'id' ? (
-              <button onClick={openDisasterDetails} className='pagination-button'>{header.name}</button>
-            ) : (
+            header.id === 'edit' || header.id === 'view' ? (
+                <div className = 'table-button-container'>
+              <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
+              <button onClick={() => { openView(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'View' : 'Edit'}</button>
+              <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
+              </div>
+              ) : (
               row.original[header.id]
             ),
         })),
@@ -69,10 +106,11 @@ export default function DisasterTable() {
       ) as any;
 
   return (
-    <div className="statistics-table">
+    <div className="evacuation-table">
+        <button onClick={handleAddHeadOfFamilyClick}>+ Add Disaster Record </button>
         <br/>
-          <div className='statistics-table-itself'>
-            <h1>Recent Disasters</h1>
+          <div className='evacuation-table-itself'>
+            <h1>Disaster Record</h1>
             <div className='search-bar'>
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
             <input

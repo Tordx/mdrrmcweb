@@ -1,50 +1,101 @@
-import { faChevronDown, faChevronUp, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fetchRegistrationList } from '../../../firebase/function'
+import { fetchCenters, fetchRegistrationList } from '../../../firebase/function'
 import React from 'react'
-import { registrationdata } from '../../../types/interfaces'
+import { centerdata, registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column } from 'react-table';
 import './evacuation.css'
+import { onSnapshot, collection, query, where } from '@firebase/firestore';
+import { db } from '../../../firebase/index'; // Assuming you have firebase configuration set up
 
 type Props = {
   onAddHeadOfFamily: (value: boolean) => void;
+  value: (e: any, b: any) => void;
+  archive: (e: boolean, b: string) => void;
+
 };
 
 const headers = [
-  {name: 'Centre', id: 'centre'},
+  {name: 'Center', id: 'center'},
   {name: 'Address', id: 'address'},
   {name: 'Total capacity', id: 'capacity'},
   {name: 'id', id:'id'},
   { name: 'Edit', id: 'edit' },
 ]
 
-export default function EvacuationTable({ onAddHeadOfFamily }: Props) {
+export default function EvacuationTable({ onAddHeadOfFamily, value, archive }: Props) {
 
-    const [tabledata, settabledata] = React.useState<registrationdata[]>([])
+    const [tabledata, settabledata] = React.useState<centerdata[]>([])
 
     const handleAddHeadOfFamilyClick = () => {
-      // Here you can access the current data in `tabledata` and pass it to the `onAddHeadOfFamily` function
       onAddHeadOfFamily(true);
     }
 
     React.useEffect(() => {
-        const getRegistration = async( ) => {
-            const result: registrationdata[] = await fetchRegistrationList() || []
-            settabledata(result)
+      let unsubscribe: void | (() => void); // Explicitly specify the type of unsubscribe
+    
+      try {
+        unsubscribe = fetchCentersAuto();
+      } catch (error) {
+        console.log(error);
+      }
+    
+      // Return a cleanup function
+      return () => {
+        if (unsubscribe) { // Check if unsubscribe is defined before calling
+          unsubscribe(); // Call unsubscribe if it exists
         }
-        getRegistration()
-    },[])
+      };
+    }, []);
+
+    const fetchCentersAuto = () => {
+      try {
+        const q = query(collection(db, 'center'), where("active", "==", true));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const newData: centerdata[] = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data) { // Check if data is not undefined
+              newData.push({
+                center: data.center || "",
+                address: data.address || "",
+                capacity: data.capacity || "",
+                id: data.id || "",
+                active: data.active || false,
+                date: data.date || new Date()
+              });
+            }
+          });
+          settabledata(newData);
+        });
+  
+        return unsubscribe;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const passdata = (id: string) => {
+      value(id, true)
+    }
+
+    const deletedata = (id: string) => {
+      archive(true, id)
+  }
 
     const columns: Column<any>[] = React.useMemo(
       () =>
         headers.map((header) => ({
           Header: header.name,
           accessor: header.id,
-          disableSortBy: header.id === 'edit' || header.id === 'view', // Disable sorting for "Edit" and "View" columns
+          disableSortBy: header.id === 'edit' || header.id === 'view',
           Cell: ({ row }) =>
             header.id === 'edit' || header.id === 'view' ? (
-              <button>{header.id === 'edit' ? 'Edit' : 'View'}</button>
-            ) : (
+                <div className = 'table-button-container'>
+              <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
+              <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
+              </div>
+              ) : (
               row.original[header.id]
             ),
         })),

@@ -43,6 +43,35 @@ export const LoginFields = ({
   )
 }
 
+export const LargeTextField = ({
+	title,
+	color,
+	disabled, 
+	icon, 
+	onChange, 
+	value, 
+	placeholder,
+	type
+}: Props) => {
+
+return (
+<>
+{title && <p className='header-title'>{title}</p>}
+<div className='global-large-text-field'>
+		<textarea
+			disabled  = {disabled}
+			onChange={onChange} 
+			value = {value} 
+			placeholder={placeholder}
+			
+			color='#8FABD3'
+			/>
+		{icon && <FontAwesomeIcon icon={icon} color= {color || '#8FABD3'}  />}
+</div>
+</>
+)
+}
+
 type SelectProps = {
 	icon: IconDefinition,
 	color?: string,

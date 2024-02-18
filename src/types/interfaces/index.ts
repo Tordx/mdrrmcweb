@@ -12,7 +12,32 @@ export interface registrationdata {
   families: string,
   id: string,
   type: string,
+  active: boolean,
   
+}
+
+export interface centerdata {
+
+  center: string,
+  address: string,
+  capacity: string,
+  id: string,
+  active: boolean,
+  date: Date,
+  
+}
+
+export interface disasterdata {
+  disaster: string,
+  id: string,
+  date: string,
+  center: string,
+  evacuees: string,
+  response: string,
+  agri: string,
+  infra: string,
+  livestock: string,
+  active: boolean,
 }
 //NOTE:You must create new interface for each data that has different data types
 
