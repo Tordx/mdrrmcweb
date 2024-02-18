@@ -17,7 +17,6 @@ import SMS from 'screens/home/SMS/SMS';
 import Disaster from 'screens/home/disasters';
 import DisasterDetails from 'screens/home/disasterdetails';
 
-
 //**NOTE**(((((ONLY USE TSRFC WHEN CREATING NEW SCREENS)))))**NOTE**/
 
 const App: React.FC = () => {

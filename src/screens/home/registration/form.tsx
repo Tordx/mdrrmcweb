@@ -26,10 +26,10 @@ export default function Form({success}: Props) {
     contact2: '',
     families: '',
     id: '',
+    subject: '',
+    message: '',
     type: '',
     active: true,
-
-  }
   ])
   const [isloading, setisloading] = React.useState<boolean>(false)
 

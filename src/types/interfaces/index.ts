@@ -12,6 +12,8 @@ export interface registrationdata {
   families: string,
   id: string,
   type: string,
+  subject: string,
+  message: string,
   active: boolean,
   
 }

@@ -89,6 +89,16 @@
     padding-bottom: 20px;
 
 }
+.form-wrapper1 {
+	width: 375px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	border-radius: 5px;
+    padding-bottom: 20px;
+
+}
 
 .school-select-container {
     margin: 10px;

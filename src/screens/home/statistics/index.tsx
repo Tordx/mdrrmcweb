@@ -27,7 +27,9 @@ export default function Statistics({}: Props) {
             contact2: doc.data().contact2,
             families: doc.data().families,
             id: doc.data().id,
-            type: doc.data().type,
+            type: doc.data().type
+            subject: doc.data().subject,
+            message: doc.data().message,
             active: doc.data().active,
           });
       });
