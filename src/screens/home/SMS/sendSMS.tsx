@@ -72,6 +72,7 @@ export default function SendSMS({onAddHeadOfFamily}: Props) {
     }
     onAddHeadOfFamily(false)
     memoizedResetForm();
+    //Comment or uncomment the sendSMS fuction to activate or deactivate
     // sendSms();
  
   };

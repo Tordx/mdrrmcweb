@@ -6,7 +6,7 @@ import { registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column, TableState } from 'react-table';
 import './sms.css'
 import { db } from 'firebase/index'
-import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
+import { doc, query, where, getDocs, collection, deleteDoc, getFirestore } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { getStorage } from "@firebase/storage";
 import 'firebase/firestore';
@@ -17,6 +17,7 @@ const { Modal } = require('react-bootstrap');
 type Props = {
     onAddHeadOfFamily: (value: boolean) => void;
     openViewSMS: (value: boolean) => void;
+    smsViewData: (value: any) => void;
     
   };
   
@@ -28,30 +29,22 @@ const headers = [
     { name: 'Delete SMS', id: 'delete' }, // Add 'Delete SMS'
   ];
   
-export default function SMSTable ({ openViewSMS , onAddHeadOfFamily }: Props) {
+export default function SMSTable ({ openViewSMS , onAddHeadOfFamily , smsViewData }: Props) {
 
     const [tabledata, settabledata] = React.useState<registrationdata[]>([])
     const [selectedSMS, setSelectedSMS] = React.useState<registrationdata | null>(null);
 
-     const viewSMS = (data: any) =>{
-        if (data) {
-            // Add your logic to send SMS using selectedSMS data
-            console.log('Sending SMS:', data);
-          }
-      }
+  
       const handleAddHeadOfFamilyClick = () => {
         // Here you can access the current data in `tabledata` and pass it to the `onAddHeadOfFamily` function
         onAddHeadOfFamily(true);
       }
       const handleViewHeadOfFamilyClick = (data: any) => {
-        console.log('data');
-        console.log(data);
-        console.log('data');
-        
+        smsViewData(data) 
         // Here you can access the current data in `tabledata` and pass it to the `onAddHeadOfFamily` function
         openViewSMS(true);
       }
-  
+    
     const firebaseConfig = {
         apiKey: "AIzaSyCKb1B3-_VHWMtSMbkMVjek1bDlmzIDQLA",
         authDomain: "mdrrmc-bdrrmc.firebaseapp.com",
@@ -69,18 +62,40 @@ export default function SMSTable ({ openViewSMS , onAddHeadOfFamily }: Props) {
       const db = getFirestore();
 
     React.useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const querySnapshot = await getDocs(collection(db, 'sms'));
-            const newMessages: registrationdata[] = querySnapshot.docs.map((doc) => doc.data() as registrationdata);
-            settabledata(newMessages);
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-        };
-    
         fetchData();
       }, []);
+
+      const fetchData = async () => {
+        try {
+          const querySnapshot = await getDocs(collection(db, 'sms'));
+          const newMessages: registrationdata[] = querySnapshot.docs.map((doc) => doc.data() as registrationdata);
+          settabledata(newMessages);
+          fetchData()
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+        
+      const deleteMessage = async (data: any) => {
+        try {
+          const messagesQuery = query(collection(db, 'sms'), where('uuid', '==', data.uuid));
+          const querySnapshot = await getDocs(messagesQuery);
+      
+          if (querySnapshot.size === 0) {
+            console.warn('No matching document found.');
+            return;
+          }
+      
+          const documentSnapshot = querySnapshot.docs[0];
+          await deleteDoc(doc(db, 'sms', documentSnapshot.id));
+      
+          console.log('Document successfully deleted!');
+          fetchData(); // Refresh the data after deletion
+        } catch (error) {
+          console.error('Error deleting document:', error);
+        }
+      };
 
       const getCurrentDay = () => {
         const currentHour = new Date().getHours();
@@ -113,7 +128,9 @@ export default function SMSTable ({ openViewSMS , onAddHeadOfFamily }: Props) {
                 </div>
               ) : header.id === 'delete' ? (
                 <div className="edit-view-cell">
-            <button className="delete-button" style={{ fontSize: '16px' }}>{header.name}</button>
+            <button 
+             onClick={() => deleteMessage(row.original)}
+            className="delete-button" style={{ fontSize: '16px' }}>{header.name}</button>
                 </div>
               ) : (
                 row.original[header.id]
@@ -225,3 +242,4 @@ export default function SMSTable ({ openViewSMS , onAddHeadOfFamily }: Props) {
         </div>
       );
 }
+
