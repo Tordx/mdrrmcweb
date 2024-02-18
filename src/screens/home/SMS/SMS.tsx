@@ -15,10 +15,6 @@ export default function SMS({}: Props) {
     setIsModalAddOpen(e);
   };
   const reloadList = (e: boolean) => {
-  console.log('e');
-  console.log(e);
-  console.log('e');
-      
   };
 
   const handleOpenViewSMS = (e: boolean) => {
