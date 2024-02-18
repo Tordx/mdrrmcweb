@@ -118,6 +118,15 @@ export default function Login({}) {
             disabled = {false}
             onChange={(e) => setloginPassword(e.target.value)} 
           />
+          <LoginFields 
+            title = 'password'
+            type  ='password'
+            icon = {faLock}
+            value={loginpassword}
+            placeholder='password'
+            disabled = {false}
+            onChange={(e) => setloginPassword(e.target.value)} 
+          />
           <a>Forgot password?</a>
           <button onClick={checkStatus}>Login</button>
           {loading && <p style={{color: error ? 'red' : 'black', fontSize: 12, textAlign: 'center'}}>{toast}</p>}

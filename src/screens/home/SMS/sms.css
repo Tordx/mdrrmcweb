@@ -18,17 +18,17 @@
     width: 80%; /* Set the modal width as needed */
     max-width: 600px; /* Set a max-width if desired */
   }
-  
+/*   
   .table {
     background-color: white;
     margin-left: 100px;
     padding-top: 100px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: flex-end;
   }
-  
+   */
   .table-itself {
     width: 100%;
     padding: 15px 15px;
@@ -81,6 +81,10 @@
   color: black;
   margin: 20px;
   margin-right: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 .edit-view-cell {
   display: flex;

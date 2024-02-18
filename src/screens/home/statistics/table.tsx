@@ -1,8 +1,8 @@
 import { faChevronDown, faChevronUp, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fetchRegistrationList } from '../../../firebase/function'
+import { fetchDisasterList, fetchRegistrationList } from '../../../firebase/function'
 import React from 'react'
-import { registrationdata } from '../../../types/interfaces'
+import { disastercenter, disasterdata, registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column } from 'react-table';
 import './statistics.css'
 
@@ -13,11 +13,11 @@ const headers = [
 
 export default function DisasterTable() {
 
-    const [tabledata, settabledata] = React.useState<registrationdata[]>([])
-    const [viewdata, setviewdata] = React.useState<registrationdata>()
+    const [tabledata, settabledata] = React.useState<disasterdata[]>([])
+    const [viewdata, setviewdata] = React.useState<disasterdata>()
     React.useEffect(() => {
         const getRegistration = async( ) => {
-            const result: registrationdata[] = await fetchRegistrationList() || []
+            const result: disasterdata[] = await fetchDisasterList() || []
             settabledata(result)
         }
         getRegistration()

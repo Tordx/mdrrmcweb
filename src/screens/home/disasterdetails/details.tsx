@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Card from 'screens/components/global/card'
 import './disasterdetails.css'
 import { useParams } from 'react-router-dom'
 import { disasterdata } from 'types/interfaces'
+import Disaster from '../disasters'
 type Props = {
     data: disasterdata | undefined
 }
 
 export const Details = (props: Props) => {
-const newData = props.data
+
+    const [newData, setNewData] = React.useState<disasterdata>()
+
+    useEffect(() => {
+        const newData = props.data
+        setNewData(newData)
+    },[props.data])
+
   return (
     <div className='card-details'>
     	<div className='card-details-wrapper'>

@@ -28,20 +28,21 @@ export default function DisasterDetails({}: Props) {
     const { id } = useParams();
     const navigate = useNavigate()
     React.useEffect(() => {
-        getData()
-    },[])
-
-    const getData = async() => {
-        try {
-          const result: disasterdata[] = await fetchdisaster(id || '') || [];
-
-          const filteredResult = result[0]
-          setEditValue(filteredResult)
-          setIsModalEditOpen(false)
-        } catch (error) {
-  
+        const getData = async() => {
+            try {
+              const result: disasterdata[] = await fetchdisaster(id || '') || [];
+    
+              const filteredResult = result[0]
+              setEditValue(filteredResult)
+              setIsModalEditOpen(false)
+            } catch (error) {
+      
+            }
         }
-    }
+        getData()
+    },[id])
+
+   
 
     const getDisasterEvacuationData = async(id: string) => {
         const result: disastercenter[] = await fetchdisasterevacuation(id) || [];

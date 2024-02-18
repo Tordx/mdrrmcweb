@@ -70,16 +70,15 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
       <LoginFields
         title='Subject'
         type='subject'
-        icon={faLock}
+        icon={faMessage}
         disabled={false}
         onChange={(e) => setForm({ ...form, subject: e.target.value })}
         placeholder='Subject'
         value={form.subject}
       />
-      <LoginFields
+      <LargeTextField
         title='Message'
         type='message'
-        icon={faLock}
         disabled={false}
         onChange={(e) => setForm({ ...form, message: e.target.value })}
         placeholder='Message'
