@@ -66,7 +66,16 @@
     text-align: center;
     font-weight: 600;
     color:#2F5288;
+    margin-bottom: 0px;
+}
+
+.form-container h5 {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color:#2F5288;
     padding: 10px 10px;
+    margin-top: 0px;
 }
 
 .form-wrapper {

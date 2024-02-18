@@ -1,0 +1,19 @@
+.card-details {
+   
+	background-color: white;
+    width: 1050px;
+    margin-left: 100px;
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+.card-details-wrapper {
+    padding: 15px 15px;
+    width: 100%;
+    border-radius: 15px;
+    background-color: #ECF1F7;
+}

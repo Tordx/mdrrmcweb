@@ -1,4 +1,4 @@
-import { faChevronDown, faChevronUp, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fetchRegistrationList } from '../../../firebase/function'
 import React from 'react'
@@ -8,6 +8,9 @@ import './registration.css'
 
 type Props = {
   onAddHeadOfFamily: (value: boolean) => void;
+  value: (id: string, someOtherValue: boolean) => void;
+  archive: (id: boolean, someOtherValue: string) => void;
+
 };
 
 const headers = [
@@ -20,15 +23,13 @@ const headers = [
   {name: 'id', id:'id'},
   {name: 'type', id:'type'},
   { name: 'Edit', id: 'edit' },
-  { name: 'View', id: 'view' },
 ]
 
-export default function RegistrationTable({ onAddHeadOfFamily }: Props) {
+export default function RegistrationTable({ onAddHeadOfFamily, value, archive }: Props) {
 
     const [tabledata, settabledata] = React.useState<registrationdata[]>([])
 
     const handleAddHeadOfFamilyClick = () => {
-      // Here you can access the current data in `tabledata` and pass it to the `onAddHeadOfFamily` function
       onAddHeadOfFamily(true);
     }
 
@@ -36,20 +37,33 @@ export default function RegistrationTable({ onAddHeadOfFamily }: Props) {
         const getRegistration = async( ) => {
             const result: registrationdata[] = await fetchRegistrationList() || []
             settabledata(result)
+            console.log(result)
         }
         getRegistration()
     },[])
+
+  const passdata = (id: string) => {
+      value(id, true)
+      console.log(id)
+    }
+
+  const deletedata = (id: string) => {
+      archive(true, id)
+  }
 
     const columns: Column<any>[] = React.useMemo(
       () =>
         headers.map((header) => ({
           Header: header.name,
           accessor: header.id,
-          disableSortBy: header.id === 'edit' || header.id === 'view', // Disable sorting for "Edit" and "View" columns
+          disableSortBy: header.id === 'edit' || header.id === 'view',
           Cell: ({ row }) =>
             header.id === 'edit' || header.id === 'view' ? (
-              <button>{header.id === 'edit' ? 'Edit' : 'View'}</button>
-            ) : (
+                <div className = 'table-button-container'>
+              <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
+              <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
+              </div>
+              ) : (
               row.original[header.id]
             ),
         })),

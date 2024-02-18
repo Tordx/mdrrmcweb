@@ -11,25 +11,26 @@ import { CircularProgress } from '@mui/material'
 import { barangay } from '../statistics/barangay'
 type Props = {
   success: (e:boolean) => void,
+  data: registrationdata | undefined
 }
 
-export default function Form({success}: Props) {
-
+export default function Edit({success, data}: Props) {
+  const newData = data
   const [form, setform] = React.useState<registrationdata[]>([
-   { firstname: '',
-    middlename: '',
-    lastname: '',
-    suffix: '',
-    address: '',
-    contact: '',
-    contact1: '',
-    contact2: '',
-    families: '',
-    id: '',
-    subject: '',
-    message: '',
-    type: '',
-    active: true,
+   { firstname: newData?.firstname || '', 
+    middlename: newData?.middlename || '',
+    lastname: newData?.lastname || '',
+    suffix: newData?.suffix || '',
+    address: newData?.address || '',
+    contact: newData?.contact || '',
+    contact1: newData?.contact1 || '',
+    contact2: newData?.contact2 || '',
+    families: newData?.families || '',
+    id: newData?.id || '',
+    type: newData?.type || '',
+    active: newData?.active || true,
+
+}
   ])
   const [isloading, setisloading] = React.useState<boolean>(false)
 
@@ -45,10 +46,10 @@ export default function Form({success}: Props) {
       contact1 ,
       contact2 ,
       families ,
+      id,
     } = form[0]
 
     try {
-      const id = generateRandomKey(25)
       const registrationRef = doc(db, 'registration', id)
       setDoc(registrationRef,{
         firstname: firstname,
@@ -81,7 +82,7 @@ export default function Form({success}: Props) {
     </>
       :
       <>
-        <h1>Community Registration</h1>
+        <h1>Edit Head of the Family Registration</h1>
           <LoginFields
               title='First Name'
               type  ='firstname'

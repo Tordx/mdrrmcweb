@@ -35,7 +35,7 @@ export default function Login({}) {
  
  getUserData();
    if(currentUser != null){
-     navigate("/alumni/news");
+     navigate("/admin/statistics");
    }
    }, [currentUser]);
 

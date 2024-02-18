@@ -1,6 +1,16 @@
 import {getDocs,collection, setDoc, doc} from '@firebase/firestore'
 import { db } from '..';
-import { registrationdata } from 'types/interfaces';
+import { centerdata, disasterdata, registrationdata } from 'types/interfaces';
+
+
+export const generateRandomKey = (length: number) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+};
 
 export const fetchRegistrationList = async() => {
   try {
@@ -22,6 +32,8 @@ export const fetchRegistrationList = async() => {
         type: doc.data().type,
         subject: doc.data().subject,
         message: doc.data().message,
+        active: doc.data().active,
+
       })
     })
 
@@ -31,6 +43,135 @@ export const fetchRegistrationList = async() => {
     console.log(error)
   }
   }
+
+  export const fetchRegistration = async(id: string) => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'registration'));
+      const thisdata: registrationdata[] = []
+      querySnapshot.forEach((doc) => {
+        if(doc.data().id === id)
+        thisdata.push({
+          firstname: doc.data().firstname,
+          middlename: doc.data().middlename,
+          lastname: doc.data().lastname,
+          suffix: doc.data().suffix,
+          address: doc.data().address,
+          contact: doc.data().contact,
+          contact1: doc.data().contact1,
+          contact2: doc.data().contact2,
+          families: doc.data().families,
+          id: doc.data().id,
+          type: doc.data().type,
+          active: doc.data().active,
+
+        })
+      })
+  
+      return thisdata;
+  
+    } catch(error){
+      console.log(error)
+    }
+    }
+
+  export const fetchCenters = async() => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'center'));
+      const thisdata: centerdata[] = []
+      querySnapshot.forEach((doc) => {
+        if(doc.data().active === true)
+        thisdata.push({
+         center: doc.data().center,
+         address: doc.data().address,
+         capacity: doc.data().capacity,
+         id: doc.data().id,
+         active: doc.data().active,
+         date: doc.data().date
+        })
+      })
+  
+      return thisdata;
+  
+    } catch(error){
+      console.log(error)
+    }
+  }
+
+  export const fetchcenter = async(id: string) => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'center'));
+      const thisdata: centerdata[] = []
+      querySnapshot.forEach((doc) => {
+        if(doc.data().id === id)
+        thisdata.push({
+         center: doc.data().center,
+         address: doc.data().address,
+         capacity: doc.data().capacity,
+         id: doc.data().id,
+         active: doc.data().active,
+         date: doc.data().date
+        })
+      })
+  
+      return thisdata;
+  
+    } catch(error){
+      console.log(error)
+    }
+  }
+export const fetchDisasterList = async() => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'disaster'));
+    const thisdata: disasterdata[] = []
+    querySnapshot.forEach((doc) => {
+      if(doc.data().active === true)
+      thisdata.push({
+        disaster: doc.data().disaster,
+        id: doc.data().id,
+        date: doc.data().date,
+        center: doc.data().center,
+        evacuees: doc.data().evacuees,
+        response: doc.data().response,
+        agri: doc.data().agri,
+        infra: doc.data().infra,
+        livestock: doc.data().livestock,
+        active: doc.data().active,
+      })
+    })
+
+    return thisdata;
+
+  } catch(error){
+    console.log(error)
+  }
+}
+
+export const fetchdisaster = async(id: string) => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'disaster'));
+    const thisdata: disasterdata[] = []
+    querySnapshot.forEach((doc) => {
+      if(doc.data().active === true)
+      thisdata.push({
+        disaster: doc.data().disaster,
+        id: doc.data().id,
+        date: doc.data().date,
+        center: doc.data().center,
+        evacuees: doc.data().evacuees,
+        response: doc.data().response,
+        agri: doc.data().agri,
+        infra: doc.data().infra,
+        livestock: doc.data().livestock,
+        active: doc.data().active,
+      })
+    })
+
+    return thisdata;
+
+  } catch(error){
+    console.log(error)
+  }
+}
 
 // import { educationdata, employmentdata, personaldata, postdata, statusdata } from '../../types/interfaces';
 

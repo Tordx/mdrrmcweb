@@ -12,7 +12,7 @@ export default function Statistics({}: Props) {
   const [data, setdata] = useState<registrationdata[]>([])
 
   React.useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'post'), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, 'registration'), (snapshot) => {
       const result: registrationdata[] = [];
       snapshot.forEach((doc) => {
         const postData = doc.data();
@@ -27,9 +27,10 @@ export default function Statistics({}: Props) {
             contact2: doc.data().contact2,
             families: doc.data().families,
             id: doc.data().id,
-            type: doc.data().type,
+            type: doc.data().type
             subject: doc.data().subject,
             message: doc.data().message,
+            active: doc.data().active,
           });
       });
       setdata(result)
@@ -43,7 +44,6 @@ export default function Statistics({}: Props) {
       <br/>
       <br/>
         <Graph chartdata={data}/>
-        <br/>
         <DisasterTable/>
     </div>
   )

@@ -8,12 +8,12 @@ type Props = {
 };
 
 const Graph = ({ chartdata }: Props) => {
-  // Mapping barangay to indices using the logic
-  const processedData = barangay.map(barangay => {
-    const index = chartdata.findIndex(data => data.address.toLowerCase() === barangay.toLowerCase());
-    return index !== -1 ? index : 0;
-  });
 
+  const processedData = barangay.map(barangay => {
+    const index = chartdata.findIndex(data => data.address === barangay);
+    return index !== -1 ? index + 1 : 0; // Adding 1 to index to match the desired output
+  });
+console.log(processedData);
   return (
     <div className='chart-container'>
       <span>
@@ -21,7 +21,7 @@ const Graph = ({ chartdata }: Props) => {
       </span>
       <BarChart
         xAxis={[{ scaleType: 'band', data: barangay }]}
-        width={2000}
+        width={1000}
         height={250}
         slotProps={{
           legend: {

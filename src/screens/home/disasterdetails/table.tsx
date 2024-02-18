@@ -1,41 +1,103 @@
-import { faChevronDown, faChevronUp, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fetchRegistrationList } from '../../../firebase/function'
+import { fetchCenters, fetchRegistrationList } from '../../../firebase/function'
 import React from 'react'
-import { registrationdata } from '../../../types/interfaces'
+import { centerdata, registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column } from 'react-table';
-import './statistics.css'
+import '../evacuation/evacuation.css'
+import { onSnapshot, collection, query, where } from '@firebase/firestore';
+import { db } from '../../../firebase/index'; // Assuming you have firebase configuration set up
+import { useParams } from 'react-router-dom'
+
+type Props = {
+  onAddHeadOfFamily: (value: boolean) => void;
+  value: (e: any, b: any) => void;
+  archive: (e: boolean, b: string) => void;
+
+};
 
 const headers = [
-  {name: 'Disaster', id: 'disaster'},
-  {name: 'Action', id: 'id'},
+  {name: 'Center', id: 'center'},
+  {name: 'Address', id: 'address'},
+  {name: 'Total capacity', id: 'capacity'},
+  {name: 'id', id:'id'},
+  { name: 'Edit', id: 'edit' },
 ]
 
-export default function DisasterTable() {
+export default function DisasterEvacTable({ onAddHeadOfFamily, value, archive }: Props) {
+    const { id } = useParams();
+    const [tabledata, settabledata] = React.useState<centerdata[]>([])
 
-    const [tabledata, settabledata] = React.useState<registrationdata[]>([])
-    const [viewdata, setviewdata] = React.useState<registrationdata>()
-    React.useEffect(() => {
-        const getRegistration = async( ) => {
-            const result: registrationdata[] = await fetchRegistrationList() || []
-            settabledata(result)
-        }
-        getRegistration()
-    },[])
-
-    const openDisasterDetails = () => {
-
+    const handleAddHeadOfFamilyClick = () => {
+      onAddHeadOfFamily(true);
     }
+
+    React.useEffect(() => {
+      let unsubscribe: void | (() => void); // Explicitly specify the type of unsubscribe
+    
+      try {
+        unsubscribe = fetchCentersAuto();
+      } catch (error) {
+        console.log(error);
+      }
+    
+      // Return a cleanup function
+      return () => {
+        if (unsubscribe) { // Check if unsubscribe is defined before calling
+          unsubscribe(); // Call unsubscribe if it exists
+        }
+      };
+    }, []);
+
+    const fetchCentersAuto = () => {
+      try {
+        const q = query(collection(db, 'center-record'), where("active", "==", true), where("disasterID", "==", id));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            console.log(id)
+          const newData: centerdata[] = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data) { // Check if data is not undefined
+              newData.push({
+                center: data.center || "",
+                address: data.address || "",
+                capacity: data.capacity || "",
+                id: data.id || "",
+                active: data.active || false,
+                date: data.date || new Date()
+              });
+            }
+          });
+          settabledata(newData);
+        });
+  
+        return unsubscribe;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const passdata = (id: string) => {
+      value(id, true)
+    }
+
+    const deletedata = (id: string) => {
+      archive(true, id)
+  }
+
     const columns: Column<any>[] = React.useMemo(
       () =>
         headers.map((header) => ({
           Header: header.name,
           accessor: header.id,
-          disableSortBy: header.id === 'id',
+          disableSortBy: header.id === 'edit' || header.id === 'view',
           Cell: ({ row }) =>
-            header.id === 'id' ? (
-              <button onClick={openDisasterDetails} className='pagination-button'>{header.name}</button>
-            ) : (
+            header.id === 'edit' || header.id === 'view' ? (
+                <div className = 'table-button-container'>
+              <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
+              <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
+              </div>
+              ) : (
               row.original[header.id]
             ),
         })),
@@ -69,10 +131,11 @@ export default function DisasterTable() {
       ) as any;
 
   return (
-    <div className="statistics-table">
+    <div className="evacuation-table">
+        <button onClick={handleAddHeadOfFamilyClick}>+ Add Evacuation Center </button>
         <br/>
-          <div className='statistics-table-itself'>
-            <h1>Recent Disasters</h1>
+          <div className='evacuation-table-itself'>
+            <h1>Evacuation Centers</h1>
             <div className='search-bar'>
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
             <input
