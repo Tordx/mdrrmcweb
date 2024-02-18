@@ -40,7 +40,7 @@ export default function RegistrationTable({ onAddHeadOfFamily, value, archive }:
             console.log(result)
         }
         getRegistration()
-    },[])
+    },[value])
 
   const passdata = (id: string) => {
       value(id, true)

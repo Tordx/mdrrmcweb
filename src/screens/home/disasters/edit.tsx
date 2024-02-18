@@ -1,207 +1,229 @@
-import { faLocationPin, faLock, faMoneyCheckAlt, faPhone, faUser, faUserAlt, faUserFriends, faWarning } from '@fortawesome/free-solid-svg-icons'
-import React, { useState } from 'react'
-import { LoginFields, Select } from 'screens/components/global/fields'
-import { centerdata, disasterdata, registrationdata } from 'types/interfaces'
-import '../../contents/styles/contents.css'
-import '../../components/styles/components.css'
-import {addDoc, collection, setDoc, doc} from '@firebase/firestore'
-import { auth, db, storage } from '../../../firebase/index'
-import { generateRandomKey } from '../../../firebase/function'
-import { CircularProgress } from '@mui/material'
-import { barangay } from '../statistics/barangay'
+import React, { useState } from 'react';
+import { LoginFields } from 'screens/components/global/fields';
+import { disasterdata } from 'types/interfaces';
+import { addDoc, doc, setDoc, collection } from '@firebase/firestore';
+import { db } from '../../../firebase/index';
+import { generateRandomKey } from '../../../firebase/function';
+import { CircularProgress } from '@mui/material';
+import { faLocationPin, faUser, faUserFriends, faWarning, faMoneyCheckAlt } from '@fortawesome/free-solid-svg-icons';
+
 type Props = {
-  success: (e:boolean) => void,
-  data: disasterdata | undefined
-}
+  success: (e: boolean) => void;
+  data: disasterdata | undefined;
+};
 
-export default function Edit({success, data}: Props) {
-  const newData = data
+export default function Edit({ success, data }: Props) {
+  const newData = data;
   const [form, setform] = React.useState<disasterdata[]>([
-   { 
-    disaster: newData?.disaster || '',
-    id:  newData?.id || '',
-    date:  newData?.date || '',
-    center:  newData?.center || '',
-    evacuees:  newData?.evacuees || '',
-    response:  newData?.response || '',
-    agri:  newData?.agri || '',
-    infra:  newData?.infra || '',
-    livestock:  newData?.livestock || '',
-    active:  newData?.active || true,
+    {
+      disaster: newData?.disaster || '',
+      id: newData?.id || '',
+      date: newData?.date || '',
+      center: newData?.center || '',
+      evacuees: newData?.evacuees || '',
+      response: newData?.response || '',
+      agri: newData?.agri || '',
+      infra: newData?.infra || '',
+      livestock: newData?.livestock || '',
+      active: newData?.active || true,
+    },
+  ]);
+  const [isloading, setisloading] = React.useState<boolean>(false);
 
-}
-  ])
-  const [isloading, setisloading] = React.useState<boolean>(false)
-
-  const submit = async() => {
-    setisloading(true)
+  const submit = async () => {
+    setisloading(true);
+  
+    // Destructuring form data
     const {
       disaster,
       date,
-      center ,
-      evacuees ,
-      response ,
-      agri ,
-      infra ,
-      livestock ,
+      center,
+      evacuees,
+      response,
+      agri,
+      infra,
+      livestock,
       active,
       id,
-    } = form[0]
-
+    } = form[0];
+  
+    // Basic data validation
+    if (!disaster || !date || !center) {
+      // Display error message or handle invalid data
+      console.error('Invalid data. Please fill in all fields with valid values.');
+      setisloading(false);
+      return;
+    }
+  
     try {
-      const registrationRef = doc(db, 'disaster', id)
-      setDoc(registrationRef,{
+      const registrationRef = doc(db, 'disaster', id);
+      await setDoc(registrationRef, {
         disaster: disaster,
         date: date,
-        center: center ,
-        evacuees: evacuees ,
-        response: response ,
-        agri: agri ,
-        infra: infra ,
-        livestock: livestock ,
+        center: center,
+        evacuees: evacuees,
+        response: response,
+        agri: agri,
+        infra: infra,
+        livestock: livestock,
         active: active,
-      }).then((res) => {
-        success(false)
-        setisloading(false)
-      })
+      });
+  
+      success(false);
+      setisloading(false);
     } catch (error) {
-      console.log('Something went wrong: ', error)
-      setisloading(false)
+      console.error('Something went wrong: ', error);
+      setisloading(false);
     }
-  }
+  };
+  
 
   return (
     <div className='form-container'>
-    {isloading ? 
-    <>
-    <CircularProgress/>
-    </>
-      :
-      <>
-        <h1>Add Disaster Record</h1>
-        <h5>Kindly input details below</h5>
+      {isloading ? (
+        <>
+          <CircularProgress />
+        </>
+      ) : (
+        <>
+          <h1>Add Disaster Record</h1>
+          <h5>Kindly input details below</h5>
 
           <LoginFields
-              title='Disaster'
-              type  ='text'
-              icon = {faWarning}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    disaster: e.target.value,
-                  },
-                ])}
-              placeholder= 'Add Disaster' 
-              value= {form[0].disaster} 
-          />
-          <LoginFields
-              title='Date'
-              type  ='date'
-              disabled = {false}
-              onChange={(e) =>{ 
-                const formattedDate = e.target.value
-                setform((prev) => [
-                  {
-                    ...prev[0],
-                    date: formattedDate.toString(),
-                  },
-                ])}
+            title='Disaster'
+            type='text'
+            icon={faWarning}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  disaster: e.target.value,
+                },
+              ])
             }
-              placeholder= 'date' 
-              value= {form[0].date} 
+            placeholder='Add Disaster'
+            value={form[0].disaster}
           />
           <LoginFields
-              title = 'Evacuation Center'
-              type  ='text'
-              icon = {faLocationPin}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    center: e.target.value,
-                  },
-                ])}
-              placeholder= 'Add Evacuation Center' 
-              value= {form[0].center} 
+            title='Date'
+            type='date'
+            disabled={false}
+            onChange={(e) => {
+              const formattedDate = e.target.value;
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  date: formattedDate.toString(),
+                },
+              ]);
+            }}
+            placeholder='date'
+            value={form[0].date}
           />
           <LoginFields
-              title = 'Evacuees'
-              type  ='text'
-              icon = {faUserFriends}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    evacuees: e.target.value,
-                  },
-                ])}
-              placeholder= 'Evacuees' 
-              value= {form[0].evacuees} 
+            title='Evacuation Center'
+            type='text'
+            icon={faLocationPin}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  center: e.target.value,
+                },
+              ])
+            }
+            placeholder='Add Evacuation Center'
+            value={form[0].center}
           />
           <LoginFields
-              title = 'Responses'
-              type  ='text'
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    response: e.target.value,
-                  },
-                ])}
-              placeholder= 'Responses/Services' 
-              value= {form[0].response} 
-          />
-           <h1>Damages</h1>
-           <h5>Kindly input details below</h5>
-          <LoginFields
-              title = 'Agriculture Damages'
-              type  ='text'
-              icon = {faMoneyCheckAlt}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    agri: e.target.value,
-                  },
-                ])}
-              placeholder= 'Estimated damage taken' 
-              value= {form[0].agri} 
+            title='Evacuees'
+            type='text'
+            icon={faUserFriends}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  evacuees: e.target.value,
+                },
+              ])
+            }
+            placeholder='Evacuees'
+            value={form[0].evacuees}
           />
           <LoginFields
-              title = 'Infrastructure Damages'
-              type  ='text'
-              icon = {faMoneyCheckAlt}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    infra: e.target.value,
-                  },
-                ])}
-              placeholder= 'Estimated damage taken' 
-              value= {form[0].infra} 
+            title='Responses'
+            type='text'
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  response: e.target.value,
+                },
+              ])
+            }
+            placeholder='Responses/Services'
+            value={form[0].response}
+          />
+          <h1>Damages</h1>
+          <h5>Kindly input details below</h5>
+          <LoginFields
+            title='Agriculture Damages'
+            type='text'
+            icon={faMoneyCheckAlt}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  agri: e.target.value,
+                },
+              ])
+            }
+            placeholder='Estimated damage taken'
+            value={form[0].agri}
           />
           <LoginFields
-              title = 'Livestock Damages'
-              type  ='text'
-              icon = {faMoneyCheckAlt}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    livestock: e.target.value,
-                  },
-                ])}
-              placeholder= 'Estimated damage taken' 
-              value= {form[0].livestock} 
+            title='Infrastructure Damages'
+            type='text'
+            icon={faMoneyCheckAlt}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  infra: e.target.value,
+                },
+              ])
+            }
+            placeholder='Estimated damage taken'
+            value={form[0].infra}
           />
-         
-          <button onClick = {submit} style = {{marginTop: 20}}>
-                Add
+          <LoginFields
+            title='Livestock Damages'
+            type='text'
+            icon={faMoneyCheckAlt}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  livestock: e.target.value,
+                },
+              ])
+            }
+            placeholder='Estimated damage taken'
+            value={form[0].livestock}
+          />
+
+          <button onClick={submit} style={{ marginTop: 20 }}>
+            Add
           </button>
         </>
-      }
+      )}
     </div>
-  )
+  );
 }

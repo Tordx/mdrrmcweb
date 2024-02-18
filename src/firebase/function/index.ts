@@ -1,6 +1,6 @@
 import {getDocs,collection, setDoc, doc} from '@firebase/firestore'
 import { db } from '..';
-import { centerdata, disastercenter, disasterdata, registrationdata } from 'types/interfaces';
+import { centerdata, disastercenter, disasterdata, registrationdata, smsdata } from 'types/interfaces';
 
 
 export const generateRandomKey = (length: number) => {
@@ -184,6 +184,25 @@ export const fetchdisasterevacuation = async(id: string) => {
        date: doc.data().date,
        services: doc.data().services,
        disasterid: doc.data().disasterid,
+      })
+    })
+
+    return thisdata;
+
+  } catch(error){
+    console.log(error)
+  }
+}
+export const fetchsms = async(id: string) => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'sms'));
+    const thisdata: smsdata[] = []
+    querySnapshot.forEach((doc) => {
+      if(doc.data().id === id)
+      thisdata.push({
+       subject: doc.data().subject,
+       message: doc.data().message,
+       id: doc.data().id,
       })
     })
 

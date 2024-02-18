@@ -171,4 +171,9 @@ export interface admindata {
   displayName: string,
   email: string,
 }
+export interface smsdata {
+  subject: string,
+  message: string,
+  id: string,
+}
 

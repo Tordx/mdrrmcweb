@@ -19,25 +19,20 @@ const headers = [
   {name: 'Total Evacuees', id: 'evacuees'},
   {name: 'Total Damages', id:''},
   {name: 'ID', id:'id'},
-
   { name: 'Action', id: 'edit' },
 ]
 
 export default function DisasterTable({ onAddHeadOfFamily, value, archive }: Props) {
 
     const [tabledata, settabledata] = React.useState<disasterdata[]>([])
+
     const navigate = useNavigate()
     const handleAddHeadOfFamilyClick = () => {
       onAddHeadOfFamily(true);
     }
-
-    
-    
-
     React.useEffect(() => {
-       
         getDisaster()
-    },[])
+    },[value , archive])
 
     const getDisaster = async( ) => {
         const result: disasterdata[] = await fetchDisasterList() || []
