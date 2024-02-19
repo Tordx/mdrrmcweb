@@ -9,10 +9,11 @@ type Props = {
 
 const Graph = ({ chartdata }: Props) => {
 
-  const processedData = barangay.map(barangay => {
-    const index = chartdata.findIndex(data => data.address === barangay);
-    return index !== -1 ? index + 1 : 0; // Adding 1 to index to match the desired output
+  const processedData = barangay.map((barangayName) => {
+    const count = chartdata.filter((data) => data.address === barangayName).length;
+    return count;
   });
+
 console.log(processedData);
   return (
     <div className='chart-container'>
