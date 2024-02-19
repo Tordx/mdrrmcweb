@@ -5,6 +5,7 @@ import React from 'react'
 import { disastercenter, disasterdata, registrationdata } from '../../../types/interfaces'
 import { useTable, usePagination, useSortBy, useGlobalFilter, Column } from 'react-table';
 import './statistics.css'
+import { useNavigate } from 'react-router-dom'
 
 const headers = [
   {name: 'Disaster', id: 'disaster'},
@@ -14,6 +15,7 @@ const headers = [
 export default function DisasterTable() {
 
     const [tabledata, settabledata] = React.useState<disasterdata[]>([])
+    const navigate = useNavigate()
     const [viewdata, setviewdata] = React.useState<disasterdata>()
     React.useEffect(() => {
         const getRegistration = async( ) => {
@@ -23,8 +25,9 @@ export default function DisasterTable() {
         getRegistration()
     },[])
 
-    const openDisasterDetails = () => {
-
+    const openDisasterDetails = (id: string) => {
+        navigate(`/admin/disasters/details/${id}`)
+    
     }
     const columns: Column<any>[] = React.useMemo(
       () =>
@@ -34,7 +37,7 @@ export default function DisasterTable() {
           disableSortBy: header.id === 'id',
           Cell: ({ row }) =>
             header.id === 'id' ? (
-              <button onClick={openDisasterDetails} className='pagination-button'>{header.name}</button>
+              <button onClick={() => openDisasterDetails(row.original.id)} className='pagination-button'>{header.name}</button>
             ) : (
               row.original[header.id]
             ),
