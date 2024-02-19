@@ -32,24 +32,40 @@ export default function Form({success}: Props) {
   ])
   const [isloading, setisloading] = React.useState<boolean>(false)
 
-  const submit = async() => {
-    setisloading(true)
+  const submit = async () => {
+    setisloading(true);
+  
     const {
-      firstname ,
-      middlename ,
-      lastname ,
-      suffix ,
-      address ,
-      contact ,
-      contact1 ,
-      contact2 ,
-      families ,
-    } = form[0]
-
+      firstname,
+      middlename,
+      lastname,
+      suffix,
+      address,
+      contact,
+      contact1,
+      contact2,
+      families,
+    } = form[0];
+  
+    // Check if required fields are not empty
+    if (
+      !firstname.trim() ||
+      !lastname.trim() ||
+      !families.trim()
+    ) {
+      // Display an error message or handle the validation failure as needed
+      alert("First name, last name, address, and number of families cannot be empty");
+      setisloading(false);
+      return;
+    }
+  
+    // Add additional validation for other fields as needed
+    // For example, you can check if contact numbers are valid, etc.
+  
     try {
-      const id = generateRandomKey(25)
-      const registrationRef = doc(db, 'registration', id)
-      setDoc(registrationRef,{
+      const id = generateRandomKey(25);
+      const registrationRef = doc(db, 'registration', id);
+      await setDoc(registrationRef, {
         firstname: firstname,
         middlename: middlename,
         lastname: lastname,
@@ -62,15 +78,16 @@ export default function Form({success}: Props) {
         id: id,
         type: 'fam',
         active: true,
-      }).then((res) => {
-        success(false)
-        setisloading(false)
-      })
+      });
+  
+      success(false);
+      setisloading(false);
     } catch (error) {
-      console.log('Something went wrong: ', error)
-      setisloading(false)
+      console.error('Something went wrong: ', error);
+      setisloading(false);
     }
-  }
+  };
+  
 
   return (
     <div className='form-container'>
@@ -151,61 +168,81 @@ export default function Form({success}: Props) {
               value= {form[0].address} 
           />
           <LoginFields
-              title = 'Contact'
-              type  ='contact'
-              icon = {faPhone}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    contact: e.target.value,
-                  },
-                ])}
-              placeholder= 'Contact' 
-              value= {form[0].contact} 
-          />
-          <LoginFields
-              title = 'Contact Alternative (optional)'
-              type  ='contact'
-              icon = {faPhone}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    contact1: e.target.value,
-                  },
-                ])}
-              placeholder= 'Contact Alternative' 
-              value= {form[0].contact1} 
-          />
-          <LoginFields
-              title = 'Contact Alternative (optional)'
-              type  ='contact'
-              icon = {faPhone}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    contact2: e.target.value,
-                  },
-                ])}
-              placeholder= 'Contact Alternative' 
-              value= {form[0].contact2} 
-          />
-          <LoginFields
-              title = 'Number of Families'
-              type  ='text'
-              icon = {faUserFriends}
-              disabled = {false}
-              onChange={(e) => setform((prev) => [
-                  {
-                    ...prev[0],
-                    families: e.target.value,
-                  },
-                ])}
-              placeholder= 'Number of Families' 
-              value= {form[0].families} 
-          />
+  title='Contact'
+  type='contact'
+  icon={faPhone}
+  disabled={false}
+  onChange={(e) => {
+    // Allow only numbers (0-9)
+    const inputValue = e.target.value.replace(/[^0-9]/g, '');
+    setform((prev) => [
+      {
+        ...prev[0],
+        contact: inputValue,
+      },
+    ]);
+  }}
+  placeholder='Contact'
+  value={form[0].contact}
+/>
+
+<LoginFields
+  title='Contact Alternative (optional)'
+  type='contact'
+  icon={faPhone}
+  disabled={false}
+  onChange={(e) => {
+    // Allow only numbers (0-9)
+    const inputValue = e.target.value.replace(/[^0-9]/g, '');
+    setform((prev) => [
+      {
+        ...prev[0],
+        contact1: inputValue,
+      },
+    ]);
+  }}
+  placeholder='Contact Alternative'
+  value={form[0].contact1}
+/>
+
+<LoginFields
+  title='Contact Alternative (optional)'
+  type='contact'
+  icon={faPhone}
+  disabled={false}
+  onChange={(e) => {
+    // Allow only numbers (0-9)
+    const inputValue = e.target.value.replace(/[^0-9]/g, '');
+    setform((prev) => [
+      {
+        ...prev[0],
+        contact2: inputValue,
+      },
+    ]);
+  }}
+  placeholder='Contact Alternative'
+  value={form[0].contact2}
+/>
+
+<LoginFields
+  title='Number of Families'
+  type='text'
+  icon={faUserFriends}
+  disabled={false}
+  onChange={(e) => {
+    // Allow only numbers (0-9)
+    const inputValue = e.target.value.replace(/[^0-9]/g, '');
+    setform((prev) => [
+      {
+        ...prev[0],
+        families: inputValue,
+      },
+    ]);
+  }}
+  placeholder='Number of Families'
+  value={form[0].families}
+/>
+
           <button onClick = {submit} style = {{marginTop: 20}}>
                 Add
           </button>

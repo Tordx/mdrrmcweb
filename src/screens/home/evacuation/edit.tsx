@@ -98,19 +98,24 @@ export default function Edit ({success, data}: Props) {
             value= {form[0].address} 
         />
         <LoginFields
-            title = 'Maximum Capacity'
-            type  ='text'
-            icon = {faUserAlt}
-            disabled = {false}
-            onChange={(e) => setform((prev) => [
-                {
-                  ...prev[0],
-                  capacity: e.target.value,
-                },
-              ])}
-            placeholder= 'Maximum Capacity' 
-            value= {form[0].capacity} 
-        />
+  title='Maximum Capacity'
+  type='number'
+  icon={faUserAlt}
+  disabled={false}
+  onChange={(e) => {
+    // Allow only numbers (0-9)
+    const inputValue = e.target.value.replace(/[^0-9]/g, '');
+    setform((prev) => [
+      {
+        ...prev[0],
+        capacity: inputValue,
+      },
+    ]);
+  }}
+  placeholder='Maximum Capacity'
+  value={form[0].capacity}
+/>
+
         
         <button onClick = {submit} style = {{marginTop: 20}}>
               Update
