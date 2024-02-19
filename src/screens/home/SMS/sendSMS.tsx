@@ -6,7 +6,7 @@ import { getStorage } from "@firebase/storage";
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, addDoc , getDocs } from 'firebase/firestore';
 import { MD5, enc } from 'crypto-js';
-import { generateRandomKey } from '../../../firebase/function';
+import { fetchRegistrationList, generateRandomKey } from '../../../firebase/function';
 import { registrationdata } from 'types/interfaces';
 
 type Props = {
@@ -31,7 +31,7 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
   const db = getFirestore();
 
   const [form, setForm] = useState<{ subject: string; message: string }>({ subject: '', message: '' });
-  const [filteredContactValues, setFilteredContactValues] = useState<string[]>([]);
+  const [filteredContactValues, setFilteredContactValues] = useState<number[]>([]);
 
   const memoizedResetForm = useCallback(() => setForm({ subject: '', message: '' }), []);
 
@@ -42,15 +42,12 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
   
   const fetchData = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'registration'));
-      const newMessages: registrationdata[] = querySnapshot.docs.map((doc) => doc.data() as registrationdata);
-  
-      // Extract 'contact' parameter from each item in newMessages
-      const contactValues = newMessages
-        .map((message) => message.contact)
-        .filter((contact) => contact.startsWith('63') && contact.length === 12);
-        setFilteredContactValues(contactValues)
-      console.log('Filtered Contact values:', contactValues);
+      const result: registrationdata[] = await fetchRegistrationList() || []
+      const filteredContact: number[] = result
+      .filter((item) => item.contact && item.contact.startsWith('0') && item.contact.length == 11)
+      .map((item) => Number(`63${item.contact.substring(1)}`)) 
+      setFilteredContactValues(filteredContact)
+      console.log('Filtered Contact values:', filteredContact);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -59,7 +56,6 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
   const handleSubmit = async () => {
     
     try {
-      // Data validation
       if (!form.subject.trim() || !form.message.trim()) {
         alert("Subject and message cannot be empty");
         return;
@@ -70,7 +66,6 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
         subject: form.subject,
         message: form.message,
         id: generateRandomKey(25)
-        // Add any other fields you want to store in the Firestore document
       };
 
       const docRef = await addDoc(chatCollection, newChat);
@@ -82,8 +77,7 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
     
     onAddHeadOfFamily(false);
     memoizedResetForm();
-    // Comment or uncomment the sendSMS function to activate or deactivate
-    // sendSms();
+    sendsms();
   };
 
   const getCurrentDay = () => {
@@ -100,7 +94,7 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
     return greetingMessage
     }
 
-    const sendSms = async () => {
+    const sendsms = async () => {
       const result = getCurrentDay();
       const apiKey = "g3p3m8ht";
       const appId = "lpoIXtmD";
@@ -108,15 +102,15 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
       const url = 'https://api.onbuka.com/v3/sendSms';
       const timestamp = Math.floor(Date.now() / 1000);
       const sign = MD5(apiKey + apiPwd + timestamp.toString());
-      const number = filteredContactValues;
+      const number = filteredContactValues.join(',')
       console.log(sign);
       console.log(timestamp);
     
       const payload = {
-        content: ``,
+        content: `ALERT FROM MDRRMC: \n ${form.message}`,
         numbers: number,
         appId: appId,
-        senderId: "Alumni Tracking"
+        senderId: "MDRRMC"
       };
     
       try {

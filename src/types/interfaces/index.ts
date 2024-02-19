@@ -131,11 +131,18 @@ export interface logindata {
   uid: string,
   email: string,
   username: string,
+  contact: string,
   password: string,
   newpassword: string,
   confirmpassword: string,
   type: string,
   
+}
+
+export interface codedata {
+  id: string,
+  code: string,
+  username: string,
 }
 
 //this is for alumni status
