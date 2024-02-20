@@ -1,4 +1,4 @@
-import {getDocs,collection, setDoc, doc} from '@firebase/firestore'
+import {getDocs,collection, setDoc, doc , getDoc} from '@firebase/firestore'
 import { db } from '..';
 import { centerdata, disastercenter, disasterdata, registrationdata, smsdata } from 'types/interfaces';
 
@@ -143,32 +143,38 @@ export const fetchDisasterList = async() => {
   }
 }
 
-export const fetchdisaster = async(id: string) => {
+export const fetchdisaster = async (id: string) => {
   try {
-    const querySnapshot = await getDocs(collection(db, 'disaster'));
-    const thisdata: disasterdata[] = []
-    querySnapshot.forEach((doc) => {
-      if(doc.data().active === true)
-      thisdata.push({
-        disaster: doc.data().disaster,
-        id: doc.data().id,
-        date: doc.data().date,
-        center: doc.data().center,
-        evacuees: doc.data().evacuees,
-        response: doc.data().response,
-        agri: doc.data().agri,
-        infra: doc.data().infra,
-        livestock: doc.data().livestock,
-        active: doc.data().active,
-      })
-    })
+    const docRef = doc(db, 'disaster', id);
+    const docSnap = await getDoc(docRef);
 
-    return thisdata;
+    if (docSnap.exists()) {
+      const data = docSnap.data();
 
-  } catch(error){
-    console.log(error)
+      if (data?.active === true) {
+        return [
+          {
+            disaster: data.disaster,
+            id: data.id,
+            date: data.date,
+            center: data.center,
+            evacuees: data.evacuees,
+            response: data.response,
+            agri: data.agri,
+            infra: data.infra,
+            livestock: data.livestock,
+            active: data.active,
+          },
+        ];
+      }
+    }
+
+    return [];
+  } catch (error) {
+    console.log(error);
+    return [];
   }
-}
+};
 
 export const fetchdisasterevacuation = async(id: string) => {
   try {
