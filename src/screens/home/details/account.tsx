@@ -22,6 +22,8 @@ export default function Account({}: Props) {
         confirmpassword: '',
         type: '',
         email: '',
+        contact: '',
+
       }
     ])
 
@@ -44,6 +46,7 @@ export default function Account({}: Props) {
                      confirmpassword: '',
                      type: '',
                      email: '',
+                     contact: '',
                     }
                  ])
             })

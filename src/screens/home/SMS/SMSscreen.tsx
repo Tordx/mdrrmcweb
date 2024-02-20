@@ -86,7 +86,6 @@ export default function SMSTable({ openViewSMS, onAddHeadOfFamily, smsViewData, 
       const querySnapshot = await getDocs(messagesQuery);
 
       if (querySnapshot.size === 0) {
-        console.warn('No matching document found.');
         return;
       }
 
@@ -103,9 +102,6 @@ export default function SMSTable({ openViewSMS, onAddHeadOfFamily, smsViewData, 
 
   const deleteMessage = async (data: any) => {
     setDeleteID(data.id)
-    console.log("data.id");
-    console.log(data.id);
-    console.log("data.id");
     setDeleteModal(true)
    
   };

@@ -11,6 +11,9 @@ type Props = {
 	color?: string,
 	title?: string,
 	type?: string,
+	onClick?: (e: any) => void,
+	timer?: boolean,
+	time?: number,
 	
 }
 
@@ -104,6 +107,39 @@ export const  Select = ({
 		</div>
 		</>
   )
+}
+
+
+export const Auth2FA = ({
+	title,
+	color,
+	disabled, 
+	icon, 
+	onChange, 
+	value, 
+	placeholder,
+	type,
+	onClick,
+	timer,
+	time
+}: Props) => {
+
+return (
+<>
+{title && <p className='header-title'>{title}</p>}
+<div className='global-input'>
+		<input
+			type={type || 'text'}
+			disabled  = {disabled}
+			onChange={onChange} 
+			value = {value} 
+			placeholder={placeholder}
+			color='#8FABD3'
+			/>
+		{timer ? <p>{time}</p> :  <a onClick={onClick}>send</a> }
+</div>
+</>
+)
 }
 
 
