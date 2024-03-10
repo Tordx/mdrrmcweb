@@ -27,11 +27,6 @@ export const Details = (props: Props) => {
             <span><h3>Infrastructure Damage: </h3><p>{newData?.infra}</p></span>
             <span><h3>Livestock Damage: </h3><p>{newData?.livestock}</p></span>
             <span><h3>Date of Record: </h3><p>{newData?.date}</p></span>
-            
-            
-            
-            
-            
         </div>
     </div>
   )

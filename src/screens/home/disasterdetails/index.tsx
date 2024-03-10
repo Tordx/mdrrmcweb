@@ -22,28 +22,26 @@ export default function DisasterDetails({}: Props) {
     const [isloading, setisloading] = React.useState<boolean>(false);
     const [editValue, setEditValue] = React.useState<disasterdata>();
     const [disastercenter, setdisastercenter] = React.useState<disastercenter>();
-
     const [deleteModal, setDeleteModal] = React.useState<boolean>(false)
     const [deleteID, setDeleteID] = React.useState<string>('')
     const { id } = useParams();
     const navigate = useNavigate()
-    React.useEffect(() => {
-        const getData = async() => {
-            try {
-              const result: disasterdata[] = await fetchdisaster(id || '') || [];
     
-              const filteredResult = result[0]
-              setEditValue(filteredResult)
-              setIsModalEditOpen(false)
-            } catch (error) {
-      
-            }
-        }
-        getData()
-    },[id])
-
-   
-
+    React.useEffect(() => {
+      const getData = async () => {
+          try {
+              const result: disasterdata[] = await fetchdisaster(id || '') || [];
+              const filteredResult = result[0];
+              setEditValue(filteredResult);
+              setIsModalEditOpen(false);
+          } catch (error) {
+              // Handle errors
+          }
+      };
+  
+      getData();
+  }, [id]);
+  
     const getDisasterEvacuationData = async(id: string) => {
         const result: disastercenter[] = await fetchdisasterevacuation(id) || [];
         const filteredResult = result[0]
