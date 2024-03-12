@@ -19,6 +19,7 @@ export default function Edit({ success, data }: Props) {
       disaster: newData?.disaster || '',
       id: newData?.id || '',
       date: newData?.date || '',
+      time: newData?.time || '',
       center: newData?.center || '',
       evacuees: newData?.evacuees || '',
       response: newData?.response || '',

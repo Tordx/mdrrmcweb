@@ -30,10 +30,10 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
   const storage = getStorage();
   const db = getFirestore();
 
-  const [form, setForm] = useState<{ subject: string; message: string }>({ subject: '', message: '' });
+  const [form, setForm] = useState<{ subject: string; message: string , time: string, date: string }>({ subject: '', message: '' , time: '', date: '' });
   const [filteredContactValues, setFilteredContactValues] = useState<number[]>([]);
 
-  const memoizedResetForm = useCallback(() => setForm({ subject: '', message: '' }), []);
+  const memoizedResetForm = useCallback(() => setForm({ subject: '', message: '', time: '', date: '' }), []);
 
   useEffect(() => {
  
@@ -65,6 +65,9 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
       const newChat = {
         subject: form.subject,
         message: form.message,
+        date: form.date,
+        time: form.time,
+        isAM: isAM(),
         id: generateRandomKey(25)
       };
 
@@ -78,6 +81,11 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
     onAddHeadOfFamily(false);
     memoizedResetForm();
     sendsms();
+  };
+
+  const isAM = () => {
+    const currentHour = parseInt(form.time.split(':')[0], 10);
+    return currentHour >= 0 && currentHour < 12;
   };
 
   const getCurrentDay = () => {
@@ -142,6 +150,22 @@ const SendSMS: React.FC<Props> = ({ onAddHeadOfFamily , reloadList }: Props) => 
         onChange={(e) => setForm({ ...form, subject: e.target.value })}
         placeholder='Subject'
         value={form.subject}
+      />
+      <LoginFields
+        title='Date'
+        type='date'
+        disabled={false}
+        onChange={(e) => setForm({ ...form, date: e.target.value })}
+        placeholder='Date'
+        value={form.date}
+      />
+      <LoginFields
+        title='Time'
+        type='time'
+        disabled={false}
+        onChange={(e) => setForm({ ...form, time: e.target.value })}
+        placeholder='Time'
+        value={form.time}
       />
       <LargeTextField
         title='Message'

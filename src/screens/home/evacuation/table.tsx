@@ -18,8 +18,9 @@ type Props = {
 const headers = [
   {name: 'Center', id: 'center'},
   {name: 'Address', id: 'address'},
+  {name: 'Latitude', id: 'latitude'},
+  {name: 'Longtitude', id: 'longitude'},
   {name: 'Total capacity', id: 'capacity'},
-  {name: 'id', id:'id'},
   { name: 'Edit', id: 'edit' },
 ]
 
@@ -59,6 +60,8 @@ export default function EvacuationTable({ onAddHeadOfFamily, value, archive }: P
               newData.push({
                 center: data.center || "",
                 address: data.address || "",
+                latitude: data.latitude || "",
+                longitude: data.longitude || "",
                 capacity: data.capacity || "",
                 id: data.id || "",
                 active: data.active || false,

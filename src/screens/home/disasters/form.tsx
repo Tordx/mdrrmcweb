@@ -17,6 +17,7 @@ export default function Form({ success }: Props) {
       disaster: '',
       id: '',
       date: '',
+      time: '',
       center: '',
       evacuees: '',
       response: '',
@@ -35,6 +36,7 @@ export default function Form({ success }: Props) {
     const {
       disaster,
       date,
+      time,
       center,
       evacuees,
       response,
@@ -45,7 +47,7 @@ export default function Form({ success }: Props) {
     } = form[0];
   
     // Basic data validation
-    if (!disaster || !date || !center ) {
+    if (!disaster || !date || !time || !center ) {
       // Display error message or handle invalid data
       alert('Invalid data. Please fill in all fields with valid values.');
       setisloading(false);
@@ -63,6 +65,7 @@ export default function Form({ success }: Props) {
         disaster: disaster,
         id: id,
         date: date,
+        time: time,
         center: center,
         evacuees: evacuees,
         response: response,
@@ -70,14 +73,18 @@ export default function Form({ success }: Props) {
         infra: infra,
         livestock: livestock,
         active: active,
+        isAM: isAM()
       });
-  
       success(false);
       setisloading(false);
     } catch (error) {
       console.error('Something went wrong: ', error);
       setisloading(false);
     }
+  };
+  const isAM = () => {
+    const currentHour = parseInt(form[0].time.split(':')[0], 10);
+    return currentHour >= 0 && currentHour < 12;
   };
   
 
@@ -123,6 +130,22 @@ export default function Form({ success }: Props) {
             }}
             placeholder='date'
             value={form[0].date}
+          />
+          <LoginFields
+            title='Time'
+            type='time'
+            disabled={false}
+            onChange={(e) => {
+              const formattedDate = e.target.value;
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  time: formattedDate.toString(),
+                },
+              ]);
+            }}
+            placeholder='date'
+            value={form[0].time}
           />
           <LoginFields
             title='Evacuation Center'

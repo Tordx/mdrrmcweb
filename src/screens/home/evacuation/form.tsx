@@ -16,6 +16,8 @@ export default function Form({ success }: Props) {
     {
       center: '',
       address: '',
+      latitude: '',
+      longitude: '',
       capacity: '',
       id: '',
       active: true,
@@ -26,28 +28,40 @@ export default function Form({ success }: Props) {
 
   const submit = async () => {
     setIsLoading(true);
-    const { center, address, capacity, active, date } = form[0];
-
+    const { center, address, capacity, active, date, longitude, latitude } = form[0];
+  
     // Check if required fields are not empty
-    if (!center.trim() || !address.trim() || !capacity.trim()) {
+    if (!center.trim() || !address.trim() || !capacity.trim() || !longitude.trim() || !latitude.trim()) {
       // Display an error message or handle the validation failure as needed
-      alert('Center name, address, and maximum capacity cannot be empty');
+      alert('Center name, address, longitude, latitude, and maximum capacity cannot be empty');
       setIsLoading(false);
       return;
     }
-
+  
+    // Validate latitude and longitude formats
+    const latRegex = /^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}/;
+    const longRegex = /^-?((1[0-7]|[1-9]?)[0-9]\.{1}\d{1,6}|180\.{1}0{1,6})/;
+  
+    if (!latRegex.test(latitude) || !longRegex.test(longitude)) {
+      alert('Invalid latitude or longitude format. Please provide valid coordinates.');
+      setIsLoading(false);
+      return;
+    }
+  
     try {
       const id = generateRandomKey(25);
       const registrationRef = doc(db, 'center', id);
       await setDoc(registrationRef, {
         center: center,
         address: address,
+        longitude: longitude,
+        latitude: latitude,
         capacity: capacity,
         id: id,
         active: true,
         date: date,
       });
-
+  
       success(false);
       setIsLoading(false);
       alert('Successfully added center');
@@ -56,6 +70,7 @@ export default function Form({ success }: Props) {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className="form-container">
@@ -95,6 +110,38 @@ export default function Form({ success }: Props) {
             }
             placeholder="Address"
             value={form[0].address}
+          />
+           <LoginFields
+            title="Latitude"
+            type="latitude"
+            icon={faUserAlt}
+            disabled={false}
+            onChange={(e) =>
+              setForm((prev) => [
+                {
+                  ...prev[0],
+                  latitude: e.target.value,
+                },
+              ])
+            }
+            placeholder="latitude"
+            value={form[0].latitude}
+          />
+           <LoginFields
+            title="Longtitude"
+            type="longitude"
+            icon={faUserAlt}
+            disabled={false}
+            onChange={(e) =>
+              setForm((prev) => [
+                {
+                  ...prev[0],
+                  longitude: e.target.value,
+                },
+              ])
+            }
+            placeholder="Longtitude"
+            value={form[0].longitude}
           />
           <LoginFields
             title="Maximum Capacity"

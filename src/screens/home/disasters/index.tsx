@@ -5,7 +5,7 @@ import DisasterTable from './table'
 import Form from './form'
 import { fetchCenters, fetchcenter, fetchdisaster } from '../../../firebase/function'
 import { centerdata, disasterdata } from 'types/interfaces'
-import {addDoc, collection, setDoc, doc} from '@firebase/firestore'
+import {addDoc, collection, setDoc, doc, updateDoc} from '@firebase/firestore'
 import { auth, db, storage } from '../../../firebase/index'
 
 import Edit from './edit'
@@ -33,24 +33,27 @@ export default function Disaster({}: Props) {
       }
   }
 
-  const deleteData = async(id: string) => {
-    setisloading(true)
+  const deleteData = async (id: string) => {
+    setisloading(true);
+  
     try {
-      const registrationRef = doc(db, 'disaster', id)
-      setDoc(registrationRef,{
-        id: id,
+      const registrationRef = doc(db, 'disaster', id);
+  
+      await setDoc(registrationRef, {
         active: false,
-      }).then((res) => {
-        setDeleteModal(false)
-        alert('successfully deleted item')
-        setisloading(false)
-      })
+      }, { merge: true });
+  
+      setDeleteModal(false);
+      alert('Successfully updated item');
+      setisloading(false);
     } catch (error) {
-      console.log('Something went wrong: ', error)
-      setDeleteModal(false)
-      setisloading(false)
+      console.log('Something went wrong: ', error);
+      setDeleteModal(false);
+      setisloading(false);
     }
-  }
+  };
+  
+  
 
   
   return (
