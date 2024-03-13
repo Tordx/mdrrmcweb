@@ -26,6 +26,7 @@ export default function Edit({ success, data }: Props) {
       agri: newData?.agri || '',
       infra: newData?.infra || '',
       livestock: newData?.livestock || '',
+      totaldamage: newData?.totaldamage || '',
       active: newData?.active || true,
     },
   ]);
@@ -44,6 +45,7 @@ export default function Edit({ success, data }: Props) {
       agri,
       infra,
       livestock,
+      totaldamage,
       active,
       id,
     } = form[0];
@@ -67,6 +69,7 @@ export default function Edit({ success, data }: Props) {
         agri: agri,
         infra: infra,
         livestock: livestock,
+        totaldamage: totaldamage,
         active: active,
       });
   

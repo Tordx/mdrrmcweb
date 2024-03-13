@@ -137,6 +137,7 @@ export const fetchDisasterList = async() => {
         agri: doc.data().agri,
         infra: doc.data().infra,
         livestock: doc.data().livestock,
+        totaldamage: doc.data().totaldamage,
         active: doc.data().active,
       })
     })
@@ -169,6 +170,7 @@ export const fetchdisaster = async (id: string) => {
             agri: data.agri,
             infra: data.infra,
             livestock: data.livestock,
+            totaldamage: data.totaldamage,
             active: data.active,
           },
         ];

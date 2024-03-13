@@ -53,6 +53,7 @@ export interface disasterdata {
   infra: string,
   livestock: string,
   active: boolean,
+  totaldamage: string,
   time: string,
 }
 

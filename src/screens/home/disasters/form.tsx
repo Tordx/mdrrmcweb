@@ -24,6 +24,7 @@ export default function Form({ success }: Props) {
       agri: '',
       infra: '',
       livestock: '',
+      totaldamage: '',
       active: true,
     },
   ]);
@@ -43,6 +44,7 @@ export default function Form({ success }: Props) {
       agri,
       infra,
       livestock,
+      // totaldamage,
       active,
     } = form[0];
   
@@ -53,6 +55,13 @@ export default function Form({ success }: Props) {
       setisloading(false);
       return;
     }
+
+    const infraValue = parseInt(infra, 10) || 0; // Default to 0 if conversion fails
+    const livestockValue = parseInt(livestock, 10) || 0;
+    const agriValue = parseInt(agri, 10) || 0;
+
+  // Calculate total damage by adding up the values
+   const totaldamage = infraValue + livestockValue + agriValue;
   
     try {
       const id = generateRandomKey(25);
@@ -73,6 +82,7 @@ export default function Form({ success }: Props) {
         infra: infra,
         livestock: livestock,
         active: active,
+        totaldamage: totaldamage,
         isAM: isAM()
       });
       success(false);
@@ -198,7 +208,7 @@ export default function Form({ success }: Props) {
           <h5>Kindly input details below</h5>
           <LoginFields
             title='Agriculture Damages'
-            type='text'
+            type='number'
             icon={faMoneyCheckAlt}
             disabled={false}
             onChange={(e) =>
@@ -214,7 +224,7 @@ export default function Form({ success }: Props) {
           />
           <LoginFields
             title='Infrastructure Damages'
-            type='text'
+            type='number'
             icon={faMoneyCheckAlt}
             disabled={false}
             onChange={(e) =>
@@ -230,7 +240,7 @@ export default function Form({ success }: Props) {
           />
           <LoginFields
             title='Livestock Damages'
-            type='text'
+            type='number'
             icon={faMoneyCheckAlt}
             disabled={false}
             onChange={(e) =>
