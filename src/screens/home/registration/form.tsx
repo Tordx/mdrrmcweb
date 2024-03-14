@@ -225,7 +225,7 @@ export default function Form({success}: Props) {
 />
 
 <LoginFields
-  title='Number of Families'
+  title='Number of Family Members'
   type='text'
   icon={faUserFriends}
   disabled={false}
@@ -239,7 +239,7 @@ export default function Form({success}: Props) {
       },
     ]);
   }}
-  placeholder='Number of Families'
+  placeholder='Number of Family Members'
   value={form[0].families}
 />
 

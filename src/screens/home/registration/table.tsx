@@ -20,8 +20,6 @@ const headers = [
   {name: 'suffix', id:'suffix'},
   {name: 'address', id:'address'},
   {name: 'contact', id:'contact'},
-  {name: 'id', id:'id'},
-  {name: 'type', id:'type'},
   { name: 'Edit', id: 'edit' },
 ]
 

@@ -16,9 +16,10 @@ type Props = {
 const headers = [
   {name: 'Name', id: 'disaster'},
   {name: 'Date', id: 'date'},
+  {name: 'Time', id: 'time'},
   {name: 'Total Evacuees', id: 'evacuees'},
-  {name: 'ID', id:'id'},
   { name: 'Action', id: 'edit' },
+  { name: 'Total Damages', id: 'totalDamages' }
 ]
 
 export default function DisasterTable({ onAddHeadOfFamily, value, archive }: Props) {
@@ -50,58 +51,51 @@ export default function DisasterTable({ onAddHeadOfFamily, value, archive }: Pro
     const openView = (id: string) => {
         navigate(`/admin/disasters/details/${id}`)
     }
-
-    const totalAgriDamages = tabledata.reduce((acc, current) => acc + (parseInt(current.agri) || 0), 0);
-    const totalInfraDamages = tabledata.reduce((acc, current) => acc + (parseInt(current.infra) || 0), 0);
-    const totalLivestockDamages = tabledata.reduce((acc, current) => acc + (parseInt(current.livestock) || 0), 0);
-    const totalDamages = totalAgriDamages + totalInfraDamages + totalLivestockDamages;
-
-const updatedHeaders = [...headers, { name: 'Total Damages', id: 'totalDamages' }];
-
-const columns: Column<any>[] = React.useMemo(
-  () =>
-    updatedHeaders.map((header) => ({
-      Header: header.name,
-      accessor: header.id,
-      disableSortBy: header.id === 'edit' || header.id === 'view' || header.id === 'totalDamages',
-      Cell: ({ row }) =>
-        header.id === 'edit' || header.id === 'view' ? (
-          <div className='table-button-container'>
-            <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
-            <button onClick={() => { openView(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'View' : 'Edit'}</button>
-            <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
-          </div>
-        ) : header.id === 'totalDamages' ? (
-          <div>{totalDamages}</div>
-        ) : (
-          row.original[header.id]
-        ),
-    })),
-  [headers]
-);
-
-
-
-    // const columns: Column<any>[] = React.useMemo(
-    //   () =>
-    //     headers.map((header) => ({
-    //       Header: header.name,
-    //       accessor: header.id,
-    //       disableSortBy: header.id === 'edit' || header.id === 'view',
-    //       Cell: ({ row }) =>
-    //         header.id === 'edit' || header.id === 'view' ? (
-    //             <div className = 'table-button-container'>
-    //           <button onClick={() => { passdata(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'Edit' : 'View'}</button>
-    //           <button onClick={() => { openView(row.original.id) }} className='pagination-button'>{header.id === 'edit' ? 'View' : 'Edit'}</button>
-    //           <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button'/>
-    //           </div>
-    //           ) : (
-    //           row.original[header.id]
-    //         ),
-    //     })),
-    //   [headers]
-    // );
+    const formatTime = (timeString: string, isAM: boolean) => {
+      const date = new Date(`2000-01-01T${timeString}`);
+      
+      // Adjust the time based on the isAM field
+      if (!isAM) {
+        date.setHours(date.getHours() + 12);
+      }
     
+      const hours = (date.getHours() % 12) || 12; // Ensure 12-hour format
+      const minutes = date.getMinutes();
+      const period = isAM ? 'AM' : 'PM'; // Use isAM parameter to determine AM or PM
+    
+      const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+      return formattedTime;
+    };
+
+
+    const columns: Column<any>[] = React.useMemo(
+      () =>
+        headers.map((header) => ({
+          Header: header.name,
+          accessor: header.id,
+          disableSortBy: header.id === 'edit' || header.id === 'view' || header.id === 'totalDamages',
+          Cell: ({ row }) => {
+            return header.id === 'edit' || header.id === 'view'
+              ? (
+                <div className='table-button-container'>
+                  <button onClick={() => passdata(row.original.id)} className='pagination-button'>
+                    {header.id === 'edit' ? 'Edit' : 'View'}
+                  </button>
+                  <button onClick={() => openView(row.original.id)} className='pagination-button'>
+                    {header.id === 'edit' ? 'View' : 'Edit'}
+                  </button>
+                  <FontAwesomeIcon onClick={() => deletedata(row.original.id)} icon={faTrash} className='icon-button' />
+                </div>
+              )
+              : header.id === 'totalDamages'
+              ? <div>{row.original.totaldamage ? parseInt(row.original.totaldamage, 10) : 0}</div>
+              : header.id === 'time'
+              ? <div>{formatTime(row.original.time, row.original.isAM)}</div>
+              : row.original[header.id];
+          },
+        })),
+      [headers]
+    );
     
       const {
         getTableProps,

@@ -25,8 +25,10 @@ type Props = {
 };
 
 const headers = [
-  { name: 'subject', id: 'subject' },
-  { name: 'message', id: 'message' },
+  { name: 'Subject', id: 'subject' },
+  { name: 'Message', id: 'message' },
+  { name: 'Date', id: 'date' },
+  { name: 'Time', id: 'time' },
   { name: 'View SMS', id: 'view' },
   { name: 'Delete SMS', id: 'delete' },
 ];
@@ -105,9 +107,9 @@ export default function SMSTable({ openViewSMS, onAddHeadOfFamily, smsViewData, 
     setDeleteModal(true)
    
   };
-
+  
   const columns: Column<any>[] = React.useMemo(
-    () =>
+    () => 
       headers.map((header) => ({
         Header: header.name,
         accessor: header.id,
@@ -133,12 +135,30 @@ export default function SMSTable({ openViewSMS, onAddHeadOfFamily, smsViewData, 
                 {header.name}
               </button>
             </div>
+            ) : header.id === 'time' ? (
+              <div>
+                {formatTime(row.original.time, row.original.isAM)}
+              </div>
           ) : (
             row.original[header.id]
           ),
       })),
-    [headers]
+    [headers , tabledata]
   );
+  const formatTime = (timeString: string, isAM: boolean) => {
+    const date = new Date(`2000-01-01T${timeString}`);
+   
+    if (!isAM) {
+      date.setHours(date.getHours() + 12);
+    }
+  
+    const hours = (date.getHours() % 12) || 12; // Ensure 12-hour format
+    const minutes = date.getMinutes();
+    const period = isAM ? 'AM' : 'PM'; // Use isAM parameter to determine AM or PM
+  
+    const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+    return formattedTime;
+  };
 
   const {
     getTableProps,

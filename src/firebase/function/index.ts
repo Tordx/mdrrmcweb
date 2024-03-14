@@ -80,6 +80,8 @@ export const fetchRegistrationList = async() => {
         thisdata.push({
          center: doc.data().center,
          address: doc.data().address,
+         longitude: doc.data().longitude,
+         latitude: doc.data().latitude,
          capacity: doc.data().capacity,
          id: doc.data().id,
          active: doc.data().active,
@@ -103,6 +105,8 @@ export const fetchRegistrationList = async() => {
         thisdata.push({
          center: doc.data().center,
          address: doc.data().address,
+         longitude: doc.data().longitude,
+         latitude: doc.data().latitude,
          capacity: doc.data().capacity,
          id: doc.data().id,
          active: doc.data().active,
@@ -126,12 +130,14 @@ export const fetchDisasterList = async() => {
         disaster: doc.data().disaster,
         id: doc.data().id,
         date: doc.data().date,
+        time: doc.data().time,
         center: doc.data().center,
         evacuees: doc.data().evacuees,
         response: doc.data().response,
         agri: doc.data().agri,
         infra: doc.data().infra,
         livestock: doc.data().livestock,
+        totaldamage: doc.data().totaldamage,
         active: doc.data().active,
       })
     })
@@ -157,12 +163,14 @@ export const fetchdisaster = async (id: string) => {
             disaster: data.disaster,
             id: data.id,
             date: data.date,
+            time: data.time,
             center: data.center,
             evacuees: data.evacuees,
             response: data.response,
             agri: data.agri,
             infra: data.infra,
             livestock: data.livestock,
+            totaldamage: data.totaldamage,
             active: data.active,
           },
         ];

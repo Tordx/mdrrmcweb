@@ -20,6 +20,8 @@ export default function Edit ({success, data}: Props) {
    { 
     center: newData?.center ||'',
     address: newData?.address || '',
+    longitude: newData?.longitude || '',
+    latitude: newData?.latitude || '',
     capacity:  newData?.capacity || '',
     id: newData?.id || '',
     active: newData?.active || true,
@@ -35,6 +37,8 @@ export default function Edit ({success, data}: Props) {
     const {
         center,
         address,
+        longitude,
+        latitude,
         capacity,
         id,
         active,
@@ -46,6 +50,8 @@ export default function Edit ({success, data}: Props) {
       setDoc(registrationRef,{
         center: center,
         address: address,
+        latitude: latitude,
+        longitude: longitude,
         capacity: capacity,
         id: id,
         active: active,
@@ -97,6 +103,38 @@ export default function Edit ({success, data}: Props) {
             placeholder= 'Address' 
             value= {form[0].address} 
         />
+         <LoginFields
+            title="Latitude"
+            type="latitude"
+            icon={faUserAlt}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  latitude: e.target.value,
+                },
+              ])
+            }
+            placeholder="latitude"
+            value={form[0].latitude}
+          />
+           <LoginFields
+            title="Longtitude"
+            type="longitude"
+            icon={faUserAlt}
+            disabled={false}
+            onChange={(e) =>
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  longitude: e.target.value,
+                },
+              ])
+            }
+            placeholder="Longtitude"
+            value={form[0].longitude}
+          />
         <LoginFields
   title='Maximum Capacity'
   type='number'

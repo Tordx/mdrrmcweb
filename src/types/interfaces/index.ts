@@ -20,6 +20,8 @@ export interface centerdata {
 
   center: string,
   address: string,
+  latitude: string,
+  longitude: string,
   capacity: string,
   id: string,
   active: boolean,
@@ -51,6 +53,8 @@ export interface disasterdata {
   infra: string,
   livestock: string,
   active: boolean,
+  totaldamage: string,
+  time: string,
 }
 
 //NOTE:You must create new interface for each data that has different data types

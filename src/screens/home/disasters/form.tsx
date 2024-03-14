@@ -17,12 +17,14 @@ export default function Form({ success }: Props) {
       disaster: '',
       id: '',
       date: '',
+      time: '',
       center: '',
       evacuees: '',
       response: '',
       agri: '',
       infra: '',
       livestock: '',
+      totaldamage: '',
       active: true,
     },
   ]);
@@ -35,22 +37,31 @@ export default function Form({ success }: Props) {
     const {
       disaster,
       date,
+      time,
       center,
       evacuees,
       response,
       agri,
       infra,
       livestock,
+      // totaldamage,
       active,
     } = form[0];
   
     // Basic data validation
-    if (!disaster || !date || !center ) {
+    if (!disaster || !date || !time || !center ) {
       // Display error message or handle invalid data
       alert('Invalid data. Please fill in all fields with valid values.');
       setisloading(false);
       return;
     }
+
+    const infraValue = parseInt(infra, 10) || 0; // Default to 0 if conversion fails
+    const livestockValue = parseInt(livestock, 10) || 0;
+    const agriValue = parseInt(agri, 10) || 0;
+
+  // Calculate total damage by adding up the values
+   const totaldamage = infraValue + livestockValue + agriValue;
   
     try {
       const id = generateRandomKey(25);
@@ -63,6 +74,7 @@ export default function Form({ success }: Props) {
         disaster: disaster,
         id: id,
         date: date,
+        time: time,
         center: center,
         evacuees: evacuees,
         response: response,
@@ -70,14 +82,19 @@ export default function Form({ success }: Props) {
         infra: infra,
         livestock: livestock,
         active: active,
+        totaldamage: totaldamage,
+        isAM: isAM()
       });
-  
       success(false);
       setisloading(false);
     } catch (error) {
       console.error('Something went wrong: ', error);
       setisloading(false);
     }
+  };
+  const isAM = () => {
+    const currentHour = parseInt(form[0].time.split(':')[0], 10);
+    return currentHour >= 0 && currentHour < 12;
   };
   
 
@@ -123,6 +140,22 @@ export default function Form({ success }: Props) {
             }}
             placeholder='date'
             value={form[0].date}
+          />
+          <LoginFields
+            title='Time'
+            type='time'
+            disabled={false}
+            onChange={(e) => {
+              const formattedDate = e.target.value;
+              setform((prev) => [
+                {
+                  ...prev[0],
+                  time: formattedDate.toString(),
+                },
+              ]);
+            }}
+            placeholder='date'
+            value={form[0].time}
           />
           <LoginFields
             title='Evacuation Center'
@@ -175,7 +208,7 @@ export default function Form({ success }: Props) {
           <h5>Kindly input details below</h5>
           <LoginFields
             title='Agriculture Damages'
-            type='text'
+            type='number'
             icon={faMoneyCheckAlt}
             disabled={false}
             onChange={(e) =>
@@ -191,7 +224,7 @@ export default function Form({ success }: Props) {
           />
           <LoginFields
             title='Infrastructure Damages'
-            type='text'
+            type='number'
             icon={faMoneyCheckAlt}
             disabled={false}
             onChange={(e) =>
@@ -207,7 +240,7 @@ export default function Form({ success }: Props) {
           />
           <LoginFields
             title='Livestock Damages'
-            type='text'
+            type='number'
             icon={faMoneyCheckAlt}
             disabled={false}
             onChange={(e) =>

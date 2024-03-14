@@ -19,12 +19,14 @@ export default function Edit({ success, data }: Props) {
       disaster: newData?.disaster || '',
       id: newData?.id || '',
       date: newData?.date || '',
+      time: newData?.time || '',
       center: newData?.center || '',
       evacuees: newData?.evacuees || '',
       response: newData?.response || '',
       agri: newData?.agri || '',
       infra: newData?.infra || '',
       livestock: newData?.livestock || '',
+      totaldamage: newData?.totaldamage || '',
       active: newData?.active || true,
     },
   ]);
@@ -43,6 +45,7 @@ export default function Edit({ success, data }: Props) {
       agri,
       infra,
       livestock,
+      totaldamage,
       active,
       id,
     } = form[0];
@@ -66,6 +69,7 @@ export default function Edit({ success, data }: Props) {
         agri: agri,
         infra: infra,
         livestock: livestock,
+        totaldamage: totaldamage,
         active: active,
       });
   
